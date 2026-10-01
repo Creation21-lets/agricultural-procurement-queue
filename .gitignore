@@ -1,0 +1,7 @@
+backend/.env
+backend/fasal.db
+backend/fasal.db-wal
+backend/fasal.db-shm
+__pycache__/
+venv/
+.venv/

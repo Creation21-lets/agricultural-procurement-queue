@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fasal Token: digital procurement queue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F5FAF0; --paper:#FFFFFF; --ink:#1F2D24; --muted:#586B5D; --line:#DDE9D4;
+  --primary:#2E7D4F; --primary-ink:#FFFFFF; --primary-soft:#E4F4DC;
+  --leaf:#63B06A; --wheat:#F4B942; --wheat-ink:#4A3410; --soil:#6F4E2F;
+  --sky:#D8EEF7; --sky-ink:#1D5A74; --sky-line:#5AAED0;
+  --danger:#C2432F; --danger-soft:#FBE3DD; --focus:#1D6FB8;
+  --hero-top:#D3EBF6; --hero-mid:#EDF8E3; --hero-bot:#FFF3CD; --hero-ink:#173B27; --hero-soft:#44624F;
+  --tok-a:#FFF4D2; --tok-b:#E4F4DC; --band-a:#E4F4DC; --band-b:#FFF0C4;
+  --c-book-bg:#FFEFBE; --c-book-ink:#6B4B08;
+  --c-wait-bg:#DCEFF8; --c-wait-ink:#1E5670;
+  --c-ok-bg:#DDF2D6; --c-ok-ink:#1E6A36;
+  --c-done-bg:#2E7D4F; --c-done-ink:#FFFFFF;
+  --c-bad-bg:#FBE3DD; --c-bad-ink:#9B2F1E;
+  --c-mute-bg:#ECEFE6; --c-mute-ink:#5C6558;
+  --shadow:0 1px 2px rgba(40,60,40,.08),0 8px 22px rgba(40,60,40,.07);
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,-apple-system,sans-serif;
+  --body:'Public Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101A14; --paper:#17241B; --ink:#EAF0E2; --muted:#A5B3A0; --line:#2B3C2F;
+    --primary:#5FB06E; --primary-ink:#0B1A0F; --primary-soft:#1F3425;
+    --leaf:#6CC07B; --wheat:#EDBB52; --wheat-ink:#2E2012; --soil:#2A3A2E;
+    --sky:#16313C; --sky-ink:#A9DAEE; --sky-line:#3F8BAA;
+    --danger:#E58375; --danger-soft:#3A1F1B; --focus:#8AB4F8;
+    --hero-top:#14303B; --hero-mid:#17301F; --hero-bot:#2B2A16; --hero-ink:#EEF3E4; --hero-soft:#B3C7AE;
+    --tok-a:#2B2813; --tok-b:#1B2E20; --band-a:#1B2E20; --band-b:#2B2813;
+    --c-book-bg:#3A3115; --c-book-ink:#F0D68A;
+    --c-wait-bg:#16313C; --c-wait-ink:#A9DAEE;
+    --c-ok-bg:#1D3322; --c-ok-ink:#A9DDB1;
+    --c-done-bg:#2F6B3C; --c-done-ink:#FFFFFF;
+    --c-bad-bg:#3A1F1B; --c-bad-ink:#F2B3A8;
+    --c-mute-bg:#242E26; --c-mute-ink:#B3BCA8;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.25);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101A14; --paper:#17241B; --ink:#EAF0E2; --muted:#A5B3A0; --line:#2B3C2F;
+  --primary:#5FB06E; --primary-ink:#0B1A0F; --primary-soft:#1F3425;
+  --leaf:#6CC07B; --wheat:#EDBB52; --wheat-ink:#2E2012; --soil:#2A3A2E;
+  --sky:#16313C; --sky-ink:#A9DAEE; --sky-line:#3F8BAA;
+  --danger:#E58375; --danger-soft:#3A1F1B; --focus:#8AB4F8;
+  --hero-top:#14303B; --hero-mid:#17301F; --hero-bot:#2B2A16; --hero-ink:#EEF3E4; --hero-soft:#B3C7AE;
+  --tok-a:#2B2813; --tok-b:#1B2E20; --band-a:#1B2E20; --band-b:#2B2813;
+  --c-book-bg:#3A3115; --c-book-ink:#F0D68A;
+  --c-wait-bg:#16313C; --c-wait-ink:#A9DAEE;
+  --c-ok-bg:#1D3322; --c-ok-ink:#A9DDB1;
+  --c-done-bg:#2F6B3C; --c-done-ink:#FFFFFF;
+  --c-bad-bg:#3A1F1B; --c-bad-ink:#F2B3A8;
+  --c-mute-bg:#242E26; --c-mute-ink:#B3BCA8;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.25);
+  color-scheme:dark;
+}
+html{height:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;min-height:100%;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);-webkit-text-size-adjust:100%}
+#app{flex:1;display:flex;flex-direction:column}
+#app>main{flex:1}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.1;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(2.1rem,5.2vw,3.7rem);font-weight:800}
+h2{font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:800}
+h3{font-size:1.25rem;font-weight:700}
+h4{font-size:1.02rem;font-weight:700}
+p{margin:0 0 .8em}
+.muted{color:var(--muted)} .sm{font-size:.875rem} .xs{font-size:.8rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+button{font-family:inherit}
+[hidden]{display:none!important}
+
+/* buttons */
+.btn{font:600 15px/1 var(--body);min-height:44px;padding:0 18px;border-radius:8px;border:1.5px solid transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;transition:background .2s,transform .2s,box-shadow .2s,filter .2s;white-space:nowrap}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(40,60,40,.14)}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.btn-primary{background:var(--primary);color:var(--primary-ink)}
+.btn-primary:hover{filter:brightness(1.1)}
+.btn-gold{background:var(--wheat);color:var(--wheat-ink)}
+.btn-gold:hover{filter:brightness(1.06)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn-ghost:hover{background:var(--primary-soft)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-sm{min-height:36px;padding:0 12px;font-size:14px}
+.btn-lg{min-height:52px;padding:0 24px;font-size:16px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+/* top bar */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--paper);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:14px;min-height:62px}
+.brand{display:flex;gap:10px;align-items:center;font-family:var(--display);font-weight:800;font-size:1.25rem;color:var(--primary);background:none;border:0;cursor:pointer;padding:0}
+.pubnav{margin-left:auto;display:flex;gap:4px;align-items:center}
+.pubnav a{padding:10px 12px;color:var(--ink);text-decoration:none;font-weight:500;border-radius:8px;cursor:pointer}
+.pubnav a:hover{background:var(--primary-soft)}
+.who{margin-left:auto;display:flex;flex-direction:column;line-height:1.2;text-align:right}
+.who-name{font-weight:600;font-size:.92rem}
+.who-role{font-size:.78rem;color:var(--muted)}
+.select-sm,.input,.select,.textarea{font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:8px;min-height:44px;padding:0 12px;width:100%}
+.select-sm{min-height:36px;width:auto;font-size:.9rem}
+.textarea{padding:10px 12px;min-height:84px;resize:vertical}
+.input:focus,.select:focus,.textarea:focus{border-color:var(--primary);outline:2px solid var(--focus);outline-offset:0}
+label.f{display:block;font-weight:600;font-size:.92rem;margin-bottom:6px}
+.field{margin-bottom:16px}
+.hint{font-size:.82rem;color:var(--muted);margin-top:5px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;color:var(--hero-ink);background:linear-gradient(180deg,var(--hero-top) 0%,var(--hero-mid) 58%,var(--hero-bot) 100%)}
+.hero-grid{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding-top:64px;padding-bottom:190px}
+.hero h1{max-width:15ch;color:var(--hero-ink)}
+.hero p.lead{font-size:1.15rem;max-width:52ch;color:var(--hero-soft);margin:22px 0 30px}
+.cta-row{display:flex;gap:12px;flex-wrap:wrap}
+.cta-row .btn-ghost{border-color:var(--primary);color:var(--primary);background:rgba(255,255,255,.55)}
+.ticket-wrap{display:flex;justify-content:center}
+.ticket{width:min(340px,100%);background:#FFFEF8;color:#2A2118;border-radius:14px;position:relative;transform:rotate(2.2deg);box-shadow:0 18px 40px rgba(40,80,50,.22);padding:22px 24px 20px}
+.ticket::before,.ticket::after{content:"";position:absolute;top:61%;width:26px;height:26px;border-radius:50%;background:var(--hero-mid)}
+.ticket::before{left:-13px}.ticket::after{right:-13px}
+.t-centre{font-weight:600;font-size:.9rem}
+.t-when{font-size:.84rem;color:#6B6556}
+.t-token{font-family:var(--display);font-weight:800;font-size:3.6rem;letter-spacing:.02em;color:#2E7D4F;line-height:1;margin:16px 0 6px;font-variant-numeric:tabular-nums}
+.t-crop{font-weight:500}
+.t-perf{border-top:2px dashed #CFC9AB;margin:20px -4px 16px}
+.t-queue{display:flex;align-items:center;gap:14px}
+.t-ahead{font-family:var(--display);font-weight:800;font-size:2.4rem;min-width:2.1ch;text-align:center;color:#4A3410;line-height:1;display:inline-block}
+.t-ahead.tick{animation:tick .45s cubic-bezier(.34,1.7,.64,1)}
+.t-dots{display:flex;gap:8px;margin-top:14px;align-items:center}
+.dot{width:16px;height:16px;border-radius:50%;background:#E6E1C8;transition:background .5s,transform .4s cubic-bezier(.34,1.7,.64,1)}
+.dot.on{background:#F4B942;transform:scale(1.12)}
+.you{margin-left:4px;background:#2E7D4F;color:#fff;font-weight:700;font-size:.8rem;padding:3px 10px;border-radius:99px}
+
+/* sky, sun, clouds, field */
+.sun{position:absolute;z-index:1;right:5%;top:26px;width:88px;height:88px;border-radius:50%;background:radial-gradient(circle at 38% 38%,#FFF1B0,#F6BE3C);box-shadow:0 0 0 14px rgba(246,190,60,.18),0 0 80px 26px rgba(246,190,60,.32);animation:sunrise 2.2s cubic-bezier(.2,.8,.2,1) both,glow 7s ease-in-out 2.2s infinite alternate}
+.cloud{position:absolute;z-index:1;height:30px;width:110px;background:#fff;border-radius:99px;opacity:.92;left:-160px;animation:drift 80s linear infinite}
+.cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:50px;height:50px;left:16px;top:-24px}.cloud::after{width:36px;height:36px;left:56px;top:-16px}
+.cloud.c1{top:16%;animation-delay:-24s}
+.cloud.c2{top:34%;transform:scale(.7);animation-duration:110s;animation-delay:-70s;opacity:.8}
+.field{position:absolute;z-index:1;left:0;right:0;bottom:0;width:100%;height:clamp(110px,22vw,220px);pointer-events:none}
+.sw{transform-box:fill-box;transform-origin:50% 100%;animation:sway 4.8s ease-in-out infinite alternate}
+
+/* welcome screen */
+.intro{flex:1;position:relative;overflow:hidden;display:grid;place-items:center;text-align:center;padding:56px 20px 190px;background:linear-gradient(180deg,var(--hero-top) 0%,var(--hero-mid) 62%,var(--hero-bot) 100%);color:var(--hero-ink)}
+.intro .sun{width:120px;height:120px;right:12%;top:12%}
+.intro .field{height:clamp(150px,30vw,300px)}
+.intro-body{position:relative;z-index:2;max-width:640px}
+.intro-logo{display:inline-block;filter:drop-shadow(0 8px 14px rgba(30,80,50,.25))}
+.intro h1{font-size:clamp(3rem,10vw,5.8rem);margin:14px 0 12px;color:var(--hero-ink)}
+.intro .tag{font-size:clamp(1.05rem,2.4vw,1.3rem);color:var(--hero-soft);margin:0 auto 30px;max-width:30ch}
+.visit{min-width:190px;font-size:1.15rem;position:relative}
+.visit::after{content:"";position:absolute;inset:-3px;border-radius:11px;border:2px solid var(--primary);animation:ring 2.6s ease-out 2s infinite;pointer-events:none}
+.intro .hint2{margin:18px 0 0;font-size:.9rem;color:var(--hero-soft)}
+.pi{animation:popin .8s cubic-bezier(.34,1.45,.64,1) both;animation-delay:var(--d,0s)}
+
+/* visit transition */
+#transit{position:fixed;inset:0;z-index:100;overflow:hidden}
+.tr-wipe{position:absolute;inset:0;clip-path:circle(0 at var(--x) var(--y))}
+.tr-wipe.w1{background:var(--wheat)}
+.tr-wipe.w2{background:linear-gradient(180deg,var(--hero-top),var(--hero-mid) 60%,var(--hero-bot))}
+#transit.run .w1{animation:wipe .8s cubic-bezier(.65,0,.35,1) forwards}
+#transit.run .w2{animation:wipe .8s cubic-bezier(.65,0,.35,1) .16s forwards}
+.tr-ticket{position:absolute;left:50%;top:50%;width:min(280px,86%);margin-left:calc(min(280px,86%) / -2);margin-top:-110px;background:#FFFEF8;color:#2A2118;border-radius:16px;padding:22px 24px;text-align:center;box-shadow:0 24px 50px rgba(40,80,50,.3);opacity:0;transform:scale(0)}
+.tr-ticket::before,.tr-ticket::after{content:"";position:absolute;top:56%;width:24px;height:24px;border-radius:50%;background:var(--hero-mid)}
+.tr-ticket::before{left:-12px}.tr-ticket::after{right:-12px}
+.tr-ticket .tk{font:800 2.8rem/1 var(--display);color:#2E7D4F;letter-spacing:.02em;margin:8px 0 4px}
+.tr-ticket .perf{border-top:2px dashed #CFC9AB;margin:14px -4px 12px}
+#transit.run .tr-ticket{animation:tpop .65s cubic-bezier(.34,1.56,.64,1) .6s forwards}
+#transit.out{animation:tout .65s ease forwards}
+#transit.out .tr-ticket{animation:tfly .65s cubic-bezier(.5,0,.75,0) forwards}
+
+/* sections */
+.section{padding:72px 0}
+.section.alt{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sec-head{max-width:640px;margin-bottom:36px}
+.sec-head p{color:var(--muted);margin-top:12px;font-size:1.05rem}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--paper)}
+.compare>div{padding:28px}
+.compare>div:first-child{background:var(--c-wait-bg);color:var(--c-wait-ink)}
+.compare>div:last-child{background:var(--primary-soft)}
+.compare ul{margin:14px 0 0;padding-left:20px}.compare li{margin-bottom:8px}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:18px;counter-reset:s}
+.steps li{position:relative;padding-top:56px}
+.steps li::before{counter-increment:s;content:counter(s);position:absolute;top:0;left:0;width:40px;height:40px;border-radius:50%;background:var(--primary);color:var(--primary-ink);font:800 1.1rem var(--display);display:grid;place-items:center;z-index:1}
+.steps li::after{content:"";position:absolute;top:19px;left:46px;right:-18px;border-top:2px dashed var(--sky-line);transform-origin:left center}
+.steps li:last-child::after{display:none}
+.steps h4{margin-bottom:6px}
+.roles{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.role{background:var(--paper);border:1px solid var(--line);border-top:6px solid var(--leaf);border-radius:10px;padding:22px;display:flex;flex-direction:column}
+.role.r-staff{border-top-color:var(--wheat)}.role.r-inspector{border-top-color:var(--sky-line)}.role.r-admin{border-top-color:var(--primary)}
+.role ul{padding-left:18px;margin:14px 0 20px;flex:1}.role li{margin-bottom:7px;font-size:.95rem}
+.centres{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.cc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px}
+.cc .big{font-family:var(--display);font-weight:800;font-size:2.2rem;line-height:1;color:var(--primary)}
+.meter{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0 6px}
+.meter>span{display:block;height:100%;width:var(--w,0%);background:var(--leaf);border-radius:99px;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.meter.hot>span{background:var(--wheat)}
+.band{background:linear-gradient(100deg,var(--band-a),var(--band-b));color:var(--ink);padding:56px 0;border-top:1px solid var(--line)}
+.band .wrap{display:flex;gap:24px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+footer.foot{padding:28px 0;color:var(--muted);font-size:.9rem;border-top:1px solid var(--line)}
+
+/* login */
+.login{display:grid;grid-template-columns:.9fr 1.1fr;gap:32px;padding-top:48px;padding-bottom:64px;align-items:start}
+.rolelist{display:grid;gap:10px;margin-top:22px}
+.roleopt{text-align:left;background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:14px 16px;cursor:pointer;display:flex;flex-direction:column;gap:2px;color:var(--ink)}
+.roleopt span{color:var(--muted);font-size:.88rem}
+.roleopt.on{border-color:var(--primary);background:var(--primary-soft);box-shadow:inset 4px 0 0 var(--primary)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:24px;box-shadow:var(--shadow)}
+.err{background:var(--danger-soft);color:var(--danger);border-radius:8px;padding:10px 12px;margin-bottom:14px;font-weight:500}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+
+/* portal */
+.portal{padding-top:26px;padding-bottom:64px}
+.page-h{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:2px solid var(--line);margin-bottom:24px}
+.tab{background:none;border:0;padding:12px 16px;font-weight:600;font-size:.96rem;color:var(--muted);cursor:pointer;transition:color .2s,border-color .2s;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;display:flex;gap:8px;align-items:center}
+.tab.on{color:var(--primary);border-bottom-color:var(--wheat)}
+.tab-n{background:var(--c-book-bg);color:var(--c-book-ink);border-radius:99px;font-size:.75rem;padding:1px 8px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+.kpi{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.kpi-v{font-family:var(--display);font-weight:800;font-size:1.8rem;line-height:1.1;color:var(--primary)}
+.kpi-l{font-size:.85rem;color:var(--muted);margin-top:2px}
+.kpi-s{font-size:.78rem;color:var(--muted)}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.stack{display:grid;gap:20px}
+.card h3{margin-bottom:12px}
+.tw{overflow-x:auto}
+table.tbl{width:100%;border-collapse:collapse;font-size:.93rem}
+.tbl th{text-align:left;font-weight:600;color:var(--muted);font-size:.82rem;padding:8px 10px;border-bottom:2px solid var(--line);white-space:nowrap}
+.tbl td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td.num,.tbl th.num{text-align:right;font-variant-numeric:tabular-nums}
+.link{background:none;border:0;color:var(--primary);font-weight:700;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px;font-size:inherit}
+.chip{display:inline-block;padding:3px 10px;border-radius:99px;font-size:.78rem;font-weight:700;white-space:nowrap}
+.chip-info{background:var(--c-book-bg);color:var(--c-book-ink)}
+.chip-wait{background:var(--c-wait-bg);color:var(--c-wait-ink)}
+.chip-ok{background:var(--c-ok-bg);color:var(--c-ok-ink)}
+.chip-done{background:var(--c-done-bg);color:var(--c-done-ink)}
+.chip-bad{background:var(--c-bad-bg);color:var(--c-bad-ink)}
+.chip-mute{background:var(--c-mute-bg);color:var(--c-mute-ink)}
+.empty{text-align:center;padding:36px 16px;color:var(--muted)}
+.empty h3{color:var(--ink);margin-bottom:6px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.toolbar .input,.toolbar .select{width:auto;min-width:180px}
+
+/* token card */
+.tokcard{background:linear-gradient(135deg,var(--tok-a),var(--tok-b));color:var(--ink);border:1px solid var(--line);border-left:8px solid var(--wheat);border-radius:12px;padding:22px 24px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.tokcard .tk{font-family:var(--display);font-weight:800;font-size:3rem;line-height:1;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:var(--primary)}
+.tokcard .sub{color:var(--muted);font-size:.92rem}
+.tokcard dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 18px;margin:16px 0 0}
+.tokcard dt{font-size:.78rem;color:var(--muted)}
+.tokcard dd{margin:0;font-weight:600}
+.active{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.statusmsg{background:var(--primary-soft);border-radius:8px;padding:14px 16px;margin-bottom:14px}
+.statusmsg strong{display:block;font-size:1.05rem}
+.qline{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}
+.qdot{width:30px;height:30px;border-radius:50%;background:var(--c-wait-bg);color:var(--c-wait-ink);display:grid;place-items:center;font-size:.75rem;font-weight:700}
+.qyou{background:var(--wheat);color:var(--wheat-ink);font-weight:800;border-radius:99px;padding:5px 14px}
+.qdone{background:var(--primary);color:var(--primary-ink)}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{position:relative;padding:0 0 18px 34px;color:var(--muted)}
+.tl li::before{content:"";position:absolute;left:6px;top:5px;width:14px;height:14px;border-radius:50%;border:2px solid var(--line);background:var(--paper)}
+.tl li::after{content:"";position:absolute;left:12px;top:22px;bottom:-2px;border-left:2px solid var(--line)}
+.tl li:last-child::after{display:none}
+.tl li.done{color:var(--ink)}.tl li.done::before{background:var(--primary);border-color:var(--primary)}
+.tl li.now{color:var(--ink);font-weight:700}.tl li.now::before{border-color:var(--wheat);background:var(--wheat)}
+.tl li.bad{color:var(--danger);font-weight:700}.tl li.bad::before{background:var(--danger);border-color:var(--danger)}
+.tl li.skip{opacity:.5}
+.tl small{display:block;font-weight:400;color:var(--muted)}
+.fl{display:grid;gap:20px;grid-template-columns:1.5fr 1fr}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;background:var(--paper);width:100%;text-align:left;color:var(--ink)}
+.opt.on{border-color:var(--primary);background:var(--primary-soft)}
+.opt[disabled]{opacity:.5;cursor:not-allowed}
+.opt strong{display:block}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border:1.5px solid var(--line);background:var(--paper);border-radius:10px;padding:8px 14px;cursor:pointer;text-align:center;min-width:76px;color:var(--ink);font-weight:600}
+.pill small{display:block;font-weight:400;color:var(--muted)}
+.pill.on{background:var(--primary);border-color:var(--primary);color:var(--primary-ink)}
+.pill.on small{color:var(--primary-ink);opacity:.85}
+.pill[disabled]{opacity:.45;cursor:not-allowed;text-decoration:line-through}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.sum dl{margin:0}.sum dt{font-size:.8rem;color:var(--muted);margin-top:10px}.sum dd{margin:0;font-weight:600}
+.sticky{position:sticky;top:calc(env(safe-area-inset-top,0px) + 78px);align-self:start}
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg label{flex:1;min-width:92px}
+.seg input{position:absolute;opacity:0}
+.seg span{display:block;text-align:center;border:1.5px solid var(--line);border-radius:10px;padding:10px 8px;cursor:pointer;font-weight:700;background:var(--paper)}
+.seg span small{display:block;font-weight:400;color:var(--muted);font-size:.76rem}
+.seg input:checked+span{border-color:var(--primary);background:var(--primary-soft)}
+.seg input:focus-visible+span{outline:3px solid var(--focus);outline-offset:2px}
+.warn{background:var(--c-book-bg);color:var(--c-book-ink);border-radius:8px;padding:8px 12px;font-size:.88rem;margin-top:8px}
+.qrow{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.qrow:last-child{border-bottom:0}
+.qpos{width:44px;height:44px;border-radius:50%;background:var(--primary);color:var(--primary-ink);display:grid;place-items:center;font:800 1.1rem var(--display)}
+.qrow:first-child .qpos{background:var(--wheat);color:var(--wheat-ink)}
+.qact{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+
+/* charts */
+.hbars{display:grid;gap:10px}
+.hb{display:grid;grid-template-columns:minmax(80px,140px) 1fr 74px;gap:10px;align-items:center;font-size:.9rem}
+.hb-t{height:14px;background:var(--line);border-radius:99px;overflow:hidden}
+.hb-f{display:block;height:100%;background:var(--leaf);border-radius:99px}
+.hb-v{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.cols{display:flex;gap:8px;align-items:flex-end;height:200px;padding-top:10px}
+.col{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end;min-width:0}
+.col-bar{width:100%;max-width:56px;background:var(--leaf);border-radius:6px 6px 0 0;min-height:3px}
+.col.hot .col-bar{background:var(--wheat)}
+.col-v{font-size:.74rem;font-variant-numeric:tabular-nums;color:var(--muted)}
+.col-l{font-size:.76rem;color:var(--muted);text-align:center}
+.mini .cols{height:90px}
+
+/* modal */
+#modal{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px}
+.scrim{position:absolute;inset:0;background:rgba(25,45,30,.45);animation:fade .25s ease both}
+.dialog{animation:popin .38s cubic-bezier(.34,1.4,.64,1) both;position:relative;background:var(--paper);color:var(--ink);border-radius:12px;width:min(560px,100%);max-height:calc(100% - 8px);overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.dialog.wide{width:min(720px,100%)}
+.dlg-h{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--paper);z-index:1}
+.dlg-b{padding:22px}
+.x{background:none;border:0;font-size:1.8rem;line-height:1;cursor:pointer;color:var(--muted);width:40px;height:40px;border-radius:8px}
+.x:hover{background:var(--primary-soft)}
+.dlg-f{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:8px}
+body.lock{overflow:hidden}
+#toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translate(-50%,20px);background:var(--soil);color:#F6F3E2;padding:12px 18px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:80;max-width:calc(100% - 32px);box-shadow:var(--shadow)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+:root[data-theme="dark"] #toast{background:#2A3A2E}
+
+/* receipt */
+.receipt{background:#fff;color:#222;border:1px solid #cfcfbf;border-radius:8px;padding:24px}
+.rc-head{display:flex;justify-content:space-between;gap:16px;border-bottom:2px solid #1E4D2B;padding-bottom:12px;margin-bottom:14px;align-items:flex-start}
+.rc-head .brandline{display:flex;align-items:center;gap:8px;font:800 1.15rem var(--display);color:#1E4D2B}
+.rc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 18px;margin:0 0 14px}
+.rc-grid dt{font-size:.75rem;color:#6b6b5b}.rc-grid dd{margin:0 0 6px;font-weight:600}
+.rc-table{width:100%;border-collapse:collapse;font-size:.92rem}
+.rc-table td{padding:7px 0;border-bottom:1px solid #e2e2d4}.rc-table td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.rc-table tr.total td{border-top:2px solid #1E4D2B;border-bottom:0;font-weight:800;font-size:1.1rem;padding-top:10px}
+.rc-foot{font-size:.8rem;color:#6b6b5b;margin:14px 0 0}
+
+/* motion */
+@keyframes popin{from{opacity:0;transform:scale(.88) translateY(14px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes ticketin{from{opacity:0;transform:translateY(30px) scale(.8) rotate(9deg)}to{opacity:1;transform:rotate(2.2deg)}}
+@keyframes sway{from{transform:rotate(-2.6deg)}to{transform:rotate(3.2deg)}}
+@keyframes sunrise{from{transform:translateY(260px);opacity:0}to{transform:none;opacity:1}}
+@keyframes glow{from{box-shadow:0 0 0 12px rgba(246,190,60,.16),0 0 70px 22px rgba(246,190,60,.28)}to{box-shadow:0 0 0 22px rgba(246,190,60,.12),0 0 100px 38px rgba(246,190,60,.4)}}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(calc(100vw + 360px))}}
+@keyframes ring{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.28,1.7);opacity:0}}
+@keyframes tick{0%{transform:scale(.6);opacity:.3}100%{transform:scale(1);opacity:1}}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes growy{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes wipe{to{clip-path:circle(150% at var(--x) var(--y))}}
+@keyframes tpop{0%{opacity:0;transform:scale(0) rotate(-14deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes tfly{to{opacity:0;transform:scale(1.5) translateY(-40px)}}
+@keyframes tout{to{opacity:0}}
+#app.animate .hero .pi{animation:popin .8s cubic-bezier(.34,1.45,.64,1) both;animation-delay:var(--d,0s)}
+#app.animate .ticket{animation:ticketin .95s cubic-bezier(.34,1.45,.64,1) .35s both}
+#app.animate .hero .sun{animation:sunrise 1.8s cubic-bezier(.2,.8,.2,1) .2s both,glow 7s ease-in-out 2s infinite alternate}
+#app.animate .portal>*:not(.tabs):not(.page-h),#app.animate .login>*{animation:rise .55s cubic-bezier(.2,.8,.2,1) both}
+#app.animate .portal>*:nth-child(4){animation-delay:.07s}
+#app.animate .portal>*:nth-child(5){animation-delay:.14s}
+#app.animate .portal>*:nth-child(6){animation-delay:.2s}
+#app.animate .tokcard{animation:popin .65s cubic-bezier(.34,1.5,.64,1) .12s both}
+#app.animate .kpi{animation:popin .5s cubic-bezier(.34,1.5,.64,1) both}
+#app.animate .kpis .kpi:nth-child(2){animation-delay:.05s}#app.animate .kpis .kpi:nth-child(3){animation-delay:.1s}#app.animate .kpis .kpi:nth-child(4){animation-delay:.15s}#app.animate .kpis .kpi:nth-child(5){animation-delay:.2s}#app.animate .kpis .kpi:nth-child(6){animation-delay:.25s}
+#app.animate .hb-f{transform-origin:left;animation:grow .95s cubic-bezier(.2,.8,.2,1) .15s both}
+#app.animate .col-bar{transform-origin:bottom;animation:growy .85s cubic-bezier(.2,.8,.2,1) .15s both}
+#app.animate .qdot{animation:popin .45s cubic-bezier(.34,1.7,.64,1) both;animation-delay:calc(var(--k,0) * .07s + .2s)}
+#app.animate .qyou{animation:popin .6s cubic-bezier(.34,1.7,.64,1) .45s both}
+#app.animate .tl li{animation:rise .45s ease both;animation-delay:calc(var(--k,0) * .07s + .15s)}
+#app.animate .meter>span{animation:grow .95s cubic-bezier(.2,.8,.2,1) .2s both;transform-origin:left}
+.qyou{display:inline-block}
+
+/* scroll reveals on the main site */
+.rv:not(.in) .meter>span{width:0}
+.compare.rv>div{opacity:0;transition:opacity .7s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.compare.rv>div:first-child{transform:translateX(-28px)}.compare.rv>div:last-child{transform:translateX(28px);transition-delay:.12s}
+.compare.rv.in>div{opacity:1;transform:none}
+.steps.rv li::before{transform:scale(0);transition:transform .55s cubic-bezier(.34,1.8,.64,1);transition-delay:calc(var(--i) * .2s)}
+.steps.rv li::after{transform:scaleX(0);transition:transform .6s ease;transition-delay:calc(var(--i) * .2s + .25s)}
+.steps.rv li>*{opacity:0;transition:opacity .6s ease;transition-delay:calc(var(--i) * .2s + .15s)}
+.steps.rv.in li::before,.steps.rv.in li::after{transform:none}
+.steps.rv.in li>*{opacity:1}
+.roles.rv .role,.centres.rv .cc{opacity:0;transform:translateY(34px) rotate(-1.6deg);transition:opacity .6s ease,transform .75s cubic-bezier(.34,1.4,.64,1);transition-delay:calc(var(--i) * .1s)}
+.roles.rv.in .role,.centres.rv.in .cc{opacity:1;transform:none}
+.roles .role,.cc{transition:box-shadow .25s ease}
+.roles.in .role:hover,.centres.in .cc:hover{box-shadow:var(--shadow)}
+.band.rv .wrap>*{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .7s cubic-bezier(.34,1.4,.64,1)}
+.band.rv.in .wrap>*{opacity:1;transform:none}
+.sec-head.rv{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.sec-head.rv.in{opacity:1;transform:none}
+
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:40px;padding-top:48px;padding-bottom:150px}
+  .sun{width:64px;height:64px;right:6%;top:14px}
+  .steps{grid-template-columns:1fr;gap:0}.steps li{padding:0 0 26px 58px;padding-top:6px}.steps li::after{top:42px;bottom:0;left:19px;right:auto;border-top:0;border-left:2px dashed var(--sky-line)}
+  .steps.rv li::after{transform:scaleY(0);transform-origin:top}
+  .roles{grid-template-columns:1fr 1fr}
+  .login,.fl,.active,.cols2,.cols3{grid-template-columns:1fr}
+  .sticky{position:static}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .pubnav a{display:none}
+  .roles,.compare,.grid2{grid-template-columns:1fr}
+  .section{padding:52px 0}
+  .who-role{display:none}
+  .bar{gap:8px}
+  .hb{grid-template-columns:90px 1fr 62px}
+  .qrow{grid-template-columns:40px 1fr}.qact{grid-column:1/-1;justify-content:flex-start}
+  .card{padding:18px}
+}
+@media print{
+  body *{visibility:hidden}
+  #modal,#modal .receipt,#modal .receipt *{visibility:visible}
+  #modal{position:absolute;inset:0;display:block;padding:0}
+  .scrim,.dlg-h,.dlg-f{display:none}
+  .dialog{box-shadow:none;width:100%;max-height:none;overflow:visible}
+  .dlg-b{padding:0}
+  .receipt{border:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal" hidden></div>
+<div id="transit" hidden></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* Connection settings.
+   FASAL_API_BASE: '' means the API is on the same server as this page (the default).
+   If the API lives elsewhere, put its address here, e.g. 'https://api.example.com'.
+   FASAL_DEMO: true pre-fills the demo logins. Set it to false for a real launch. */
+window.FASAL_API_BASE='';
+window.FASAL_DEMO=true;
+</script>
+<script>
+(function(){
+'use strict';
+
+/* ================= utilities ================= */
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const dkey=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return dkey(d)};
+const TODAY=addDays(0);
+const fmtDate=k=>{const p=k.split('-').map(Number);return new Date(p[0],p[1]-1,p[2]).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})};
+const fmtTime=t=>t?new Date(t).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):'';
+const num=n=>Number(n).toLocaleString('en-US');
+const kg=n=>num(n)+' kg';
+const rs=n=>'Rs '+num(Math.round(n));
+const tons=k=>(k/1000).toFixed(1)+' t';
+const sum=(a,f)=>a.reduce((s,x)=>s+(f(x)||0),0);
+const avg=a=>a.length?Math.round(a.reduce((s,x)=>s+x,0)/a.length):0;
+const digits=s=>String(s||'').replace(/\D/g,'');
+let seedv=20261001;
+const rnd=()=>{seedv=(seedv*1664525+1013904223)%4294967296;return seedv/4294967296};
+const ri=(a,b)=>Math.floor(rnd()*(b-a+1))+a;
+const pick=a=>a[ri(0,a.length-1)];
+
+/* ================= constants ================= */
+const SLOTS=['8–9 am','9–10 am','10–11 am','11 am–12 pm','12–1 pm','1–2 pm','2–3 pm','3–4 pm'];
+const SERVICE_MIN=10;
+const GRADE={A:{factor:1,desc:'Clean, within limits'},B:{factor:.96,desc:'Minor defects'},C:{factor:.92,desc:'Below standard'}};
+const STATUS={booked:['Booked','chip-info'],checked_in:['In queue','chip-wait'],inspection:['At inspection','chip-wait'],approved:['Approved','chip-ok'],unloaded:['Unloaded','chip-ok'],completed:['Completed','chip-done'],rejected:['Rejected','chip-bad'],cancelled:['Cancelled','chip-mute']};
+const ROLES={
+  farmer:{label:'Farmer',blurb:'Book a slot, get a token and follow your queue.'},
+  staff:{label:'Centre staff',blurb:'Check in farmers, run the queue, weigh and receipt.'},
+  inspector:{label:'Quality inspector',blurb:'Grade crops, record moisture, approve or reject.'},
+  admin:{label:'Administrator',blurb:'Manage centres, capacity, reports and waiting times.'}
+};
+
+/* ================= state ================= */
+const S={
+  session:null,page:'intro',
+  ui:{farmerTab:'home',staffTab:'bookings',inspTab:'pending',adminTab:'overview',loginRole:'farmer',loginMode:'signin',book:null,booked:null,selBooking:null,staffQ:'',staffStatus:'all',staffDate:TODAY,farmerQ:'',rep:null},
+  farmers:[],centres:[],crops:[],bookings:[],staff:[],inspectors:[],admin:{name:'Sadia Perveen',title:'Regional manager'},
+  counters:{bid:0,fid:0,cid:4}
+};
+const C=id=>S.centres.find(x=>x.id===id)||{name:'Unknown',code:'UNK',capacity:0};
+const F=id=>S.farmers.find(x=>x.id===id)||{name:'Unknown',phone:'',village:''};
+const K=id=>S.crops.find(x=>x.id===id)||{name:id,rate:0,maxMoist:14};
+const slotCap=c=>Math.max(1,Math.ceil(c.capacity/8));
+const slotLoad=(cid,date,slot)=>S.bookings.filter(b=>b.centreId===cid&&b.date===date&&b.slot===slot&&b.status!=='cancelled').length;
+const dayLoad=(cid,date)=>S.bookings.filter(b=>b.centreId===cid&&b.date===date&&b.status!=='cancelled').length;
+const queueOf=(cid,date)=>S.bookings.filter(b=>b.centreId===cid&&b.date===date&&b.status==='checked_in').sort((a,b)=>a.seq-b.seq);
+const received=b=>b.net&&['approved','unloaded','completed'].includes(b.status);
+const isActive=b=>!['completed','rejected','cancelled'].includes(b.status);
+
+/* ================= API layer (talks to the Flask backend) ================= */
+const API_BASE=String(window.FASAL_API_BASE||'').replace(/\/$/,'');
+const DEMO=window.FASAL_DEMO===true;
+let TOKEN=null;try{TOKEN=sessionStorage.getItem('ft_token')}catch(e){}
+function setToken(t){TOKEN=t;try{t?sessionStorage.setItem('ft_token',t):sessionStorage.removeItem('ft_token')}catch(e){}}
+async function api(path,method,body){
+  let res;
+  try{res=await fetch(API_BASE+'/api'+path,{method:method||'GET',headers:Object.assign({'Content-Type':'application/json'},TOKEN?{Authorization:'Bearer '+TOKEN}:{}),body:body===undefined?undefined:JSON.stringify(body)})}
+  catch(e){throw new Error('Cannot reach the server. Check your connection and try again.')}
+  let data=null;try{data=await res.json()}catch(e){}
+  if(res.status===401&&TOKEN){const m=(data&&data.error)||'Your session has expired. Please sign in again.';expireSession();toast(m);throw new Error(m)}
+  if(!res.ok)throw new Error((data&&data.error)||('Request failed ('+res.status+')'));
+  return data;
+}
+function expireSession(){setToken(null);S.session=null;S.me=null;S.page='login';render()}
+async function loadState(){
+  if(!TOKEN){
+    const d=await api('/public/centres');
+    S.centres=d.centres;S.crops=[];S.farmers=[];S.bookings=[];S.staff=[];S.inspectors=[];S.me=null;S.session=null;return;
+  }
+  const d=await api('/bootstrap');
+  S.me=d.me;S.centres=d.centres;S.crops=d.crops;S.farmers=d.farmers;S.bookings=d.bookings;S.inspectors=d.inspectors;
+  S.staff=d.role==='staff'?[d.me]:[];
+  if(d.role==='admin')S.admin=d.me;
+  S.session={role:d.role,userId:d.me.id};
+}
+/* run an API call, then reload the data and redraw. Returns the result, or undefined if it failed. */
+async function act(fn,msg){
+  if(S.busy)return;S.busy=true;
+  try{
+    const r=await fn();await loadState();render();
+    if(msg)toast(typeof msg==='function'?msg(r):msg);
+    return r;
+  }catch(e){
+    toast(e.message);
+    try{await loadState();render()}catch(_){}
+  }finally{S.busy=false}
+}
+async function startSession(r,page,tab){
+  setToken(r.token);await loadState();
+  S.page=page;if(tab)S.ui.farmerTab=tab;S.ui.booked=null;S.ui.book=null;render();window.scrollTo(0,0);
+}
+
+/* ================= shared view helpers ================= */
+const chip=st=>{const s=STATUS[st]||['?','chip-mute'];return '<span class="chip '+s[1]+'">'+s[0]+'</span>'};
+const kpi=(l,v,s)=>'<div class="kpi"><div class="kpi-v">'+v+'</div><div class="kpi-l">'+l+'</div>'+(s?'<div class="kpi-s">'+s+'</div>':'')+'</div>';
+const logo=()=>'<svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--primary)"/><path d="M16 27V10" stroke="var(--wheat)" stroke-width="2" stroke-linecap="round"/><g fill="var(--wheat)"><ellipse cx="12" cy="14" rx="2.2" ry="4" transform="rotate(-30 12 14)"/><ellipse cx="20" cy="14" rx="2.2" ry="4" transform="rotate(30 20 14)"/><ellipse cx="12" cy="20" rx="2.2" ry="4" transform="rotate(-30 12 20)"/><ellipse cx="20" cy="20" rx="2.2" ry="4" transform="rotate(30 20 20)"/><ellipse cx="16" cy="8.5" rx="2" ry="3.4"/></g></svg>';
+const tabBar=(g,tabs)=>'<div class="tabs" role="tablist">'+tabs.map(t=>'<button class="tab '+(S.ui[g]===t[0]?'on':'')+'" role="tab" aria-selected="'+(S.ui[g]===t[0])+'" data-act="tab" data-group="'+g+'" data-val="'+t[0]+'">'+t[1]+(t[2]!=null?'<span class="tab-n">'+t[2]+'</span>':'')+'</button>').join('')+'</div>';
+const empty=(t,m)=>'<div class="empty"><h3>'+t+'</h3><p>'+m+'</p></div>';
+function hbars(items,fmt){const max=Math.max(1,...items.map(i=>i.v));return '<div class="hbars">'+items.map(i=>'<div class="hb"><span>'+esc(i.l)+'</span><span class="hb-t"><span class="hb-f" style="width:'+(i.v/max*100).toFixed(1)+'%"></span></span><span class="hb-v">'+fmt(i.v)+'</span></div>').join('')+'</div>'}
+function cols(items,fmt,hotMax){const max=Math.max(1,...items.map(i=>i.v));return '<div class="cols">'+items.map(i=>'<div class="col '+(hotMax&&i.v===max&&max>0?'hot':'')+'"><span class="col-v">'+fmt(i.v)+'</span><span class="col-bar" style="height:'+Math.max(2,i.v/max*135)+'px"></span><span class="col-l">'+esc(i.l)+'</span></div>').join('')+'</div>'}
+function timeline(b){
+  const steps=[['Booked',b.createdAt],['Checked in',b.checkInAt],['Weighed',b.weighedAt],['Quality checked',b.quality&&b.quality.at],['Unloaded',b.unloadedAt],['Receipt and payment',b.completedAt]];
+  const done={booked:1,checked_in:2,inspection:3,approved:4,unloaded:5,completed:6,rejected:4,cancelled:1}[b.status];
+  return '<ol class="tl">'+steps.map((s,i)=>{
+    let cls=i<done?'done':(i===done?'now':''),label=s[0];
+    if(b.status==='rejected'){if(i===3){cls='bad';label='Rejected at quality check'}if(i>=4)cls='skip'}
+    if(b.status==='cancelled'&&i>=1)cls='skip';
+    return '<li class="'+cls+'" style="--k:'+i+'">'+label+(s[1]&&cls!=='skip'&&i<done?'<small>'+fmtTime(s[1])+'</small>':'')+'</li>';
+  }).join('')+'</ol>';
+}
+function tokenCard(b){
+  const k=K(b.cropId),c=C(b.centreId);
+  return '<div class="tokcard"><div class="sub">Your digital token</div><div class="tk">'+b.token+'</div><div style="margin-top:8px">'+chip(b.status)+'</div>'+
+  '<dl><div><dt>Procurement centre</dt><dd>'+esc(c.name)+'</dd></div><div><dt>Date</dt><dd>'+(b.date===TODAY?'Today':fmtDate(b.date))+'</dd></div><div><dt>Time slot</dt><dd>'+SLOTS[b.slot]+'</dd></div><div><dt>Crop</dt><dd>'+esc(k.name)+'</dd></div><div><dt>Expected quantity</dt><dd>'+kg(b.qty)+'</dd></div></dl></div>';
+}
+function statusMsg(b){
+  const q=queueOf(b.centreId,b.date),idx=q.findIndex(x=>x.id===b.id);
+  switch(b.status){
+    case 'booked': return ['Not checked in yet','Show this token to staff at the centre gate during your slot. They will add you to the queue. '+q.length+' '+(q.length===1?'farmer is':'farmers are')+' waiting at this centre now.'];
+    case 'checked_in': return [idx===0?'You are next':'Position '+(idx+1)+' in the queue',idx===0?'Please go to the weighbridge when staff call your token.':idx+' '+(idx===1?'farmer is':'farmers are')+' ahead of you. Estimated wait is about '+idx*SERVICE_MIN+' minutes.'];
+    case 'inspection': return ['Weighed, waiting for quality check','Net weight '+kg(b.net)+'. Your crop is assigned to inspector '+esc((S.inspectors.find(i=>i.id===b.inspectorId)||{name:'on duty'}).name)+'.'];
+    case 'approved': return ['Quality approved, Grade '+b.quality.grade,'Proceed to the unloading bay. Staff will confirm once unloading is complete.'];
+    case 'unloaded': return ['Unloading confirmed','Staff are completing your procurement record and payment.'];
+    case 'completed': return ['Procurement complete','Final weight '+kg(b.net)+'. Payment '+b.payment.status.toLowerCase()+': '+rs(b.payment.amount)+'.'];
+    case 'rejected': return ['Produce rejected',esc(b.quality&&b.quality.remarks||'Did not meet quality limits.')];
+    default: return ['Booking cancelled','This booking was cancelled.'];
+  }
+}
+
+/* ================= public pages ================= */
+function pubHeader(){
+  return '<header class="topbar"><div class="wrap bar"><button class="brand" data-act="go" data-page="home" aria-label="Fasal Token home">'+logo()+'<span>Fasal Token</span></button>'+
+  '<nav class="pubnav" aria-label="Main"><a data-act="anchor" data-target="how">How it works</a><a data-act="anchor" data-target="roles">Who uses it</a><a data-act="anchor" data-target="centres">Centres</a><button class="btn btn-primary btn-sm" data-act="go" data-page="login">Sign in</button></nav></div></header>';
+}
+function footer(){
+  return '<footer class="foot"><div class="wrap">Fasal Token is a working prototype with sample data. Rates, farmers and centres shown are examples. <button class="link" data-act="go" data-page="intro">Back to welcome screen</button></div></footer>';
+}
+function fieldScene(n){
+  let st='';
+  for(let i=0;i<n;i++){
+    const x=Math.round((i+.5)*(1440/n)+((i*53)%26)-13),sc=(.78+((i*37)%45)/100).toFixed(2),d=(((i*29)%48)/10).toFixed(1);
+    st+='<g transform="translate('+x+' 206) scale('+sc+')"><g class="sw" style="animation-delay:-'+d+'s"><use href="#ear"/></g></g>';
+  }
+  const pair=y=>'<ellipse cx="-6.5" cy="'+y+'" rx="3.3" ry="8" transform="rotate(-30 -6.5 '+y+')"/><ellipse cx="6.5" cy="'+y+'" rx="3.3" ry="8" transform="rotate(30 6.5 '+y+')"/>';
+  return '<svg class="field" viewBox="0 0 1440 200" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><g id="ear"><path d="M0 0V-104" stroke="#7FA84A" stroke-width="3.5" stroke-linecap="round" fill="none"/><g fill="#E8AC30">'+pair(-92)+pair(-78)+pair(-64)+pair(-50)+'<ellipse cx="0" cy="-108" rx="3.2" ry="9"/></g></g></defs>'+
+  '<path d="M0 118C240 66 480 150 720 108S1200 58 1440 108V200H0Z" fill="#D0E9BF"/><path d="M0 150C300 108 520 172 800 140S1250 108 1440 150V200H0Z" fill="#B6DE9D"/>'+st+'<path d="M0 176C360 150 700 192 1000 168S1330 160 1440 174V200H0Z" fill="#8EC87D"/></svg>';
+}
+function intro(){
+  return '<main class="intro"><div class="sun" aria-hidden="true"></div><div class="cloud c1" aria-hidden="true"></div><div class="cloud c2" aria-hidden="true"></div>'+
+  '<div class="intro-body"><div class="intro-logo pi" style="--d:.2s"><svg width="76" height="76" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="var(--primary)"/><path d="M16 27V10" stroke="var(--wheat)" stroke-width="2" stroke-linecap="round"/><g fill="var(--wheat)"><ellipse cx="12" cy="14" rx="2.2" ry="4" transform="rotate(-30 12 14)"/><ellipse cx="20" cy="14" rx="2.2" ry="4" transform="rotate(30 20 14)"/><ellipse cx="12" cy="20" rx="2.2" ry="4" transform="rotate(-30 12 20)"/><ellipse cx="20" cy="20" rx="2.2" ry="4" transform="rotate(30 20 20)"/><ellipse cx="16" cy="8.5" rx="2" ry="3.4"/></g></svg></div>'+
+  '<h1 class="pi" style="--d:.4s">Fasal Token</h1><p class="tag pi" style="--d:.6s">Digital procurement queue for farmers and procurement centres.</p>'+
+  '<div class="pi" style="--d:.8s"><button class="btn btn-primary btn-lg visit" data-act="visit">Visit</button></div><p class="hint2 pi" style="--d:1s">Book a slot. Get a token. Skip the wait.</p></div>'+fieldScene(44)+'</main>';
+}
+function home(){
+  const centres=S.centres.map((c,i)=>{
+    const q=c.queueNow!=null?c.queueNow:queueOf(c.id,TODAY).length,load=c.loadToday!=null?c.loadToday:dayLoad(c.id,TODAY),pct=Math.min(100,Math.round(load/c.capacity*100));
+    return '<div class="cc" style="--i:'+i+'"><h4>'+esc(c.name)+'</h4><div class="muted sm">'+esc(c.district)+' district</div><div style="display:flex;align-items:baseline;gap:8px;margin-top:14px"><span class="big">'+q+'</span><span>in queue now</span></div><div class="meter '+(pct>80?'hot':'')+'"><span style="--w:'+pct+'%"></span></div><div class="xs muted">'+load+' of '+c.capacity+' daily bookings used</div></div>';
+  }).join('');
+  const lis=a=>'<ul>'+a.map(x=>'<li>'+x+'</li>').join('')+'</ul>';
+  const step=(i,t,p)=>'<li style="--i:'+i+'"><h4>'+t+'</h4><p class="muted sm">'+p+'</p></li>';
+  const role=(i,k,t,items,label)=>'<div class="role r-'+k+'" style="--i:'+i+'"><h3>'+t+'</h3>'+lis(items)+'<button class="btn btn-primary" data-act="go" data-page="login" data-role="'+k+'">'+label+'</button></div>';
+  return pubHeader()+'<main>'+
+  '<section class="hero"><div class="sun" aria-hidden="true"></div><div class="cloud c1" aria-hidden="true"></div><div class="cloud c2" aria-hidden="true"></div><div class="wrap hero-grid"><div><h1 class="pi" style="--d:.15s">Book your slot. Get your token. Unload without the long wait.</h1>'+
+  '<p class="lead pi" style="--d:.35s">Fasal Token lets farmers register their crop, pick a procurement centre and a time, and follow the queue from their phone. Centre staff, quality inspectors and administrators work from the same live queue.</p>'+
+  '<div class="cta-row pi" style="--d:.55s"><button class="btn btn-gold btn-lg" data-act="go" data-page="login" data-role="farmer">Book a procurement slot</button><button class="btn btn-ghost btn-lg" data-act="go" data-page="login" data-role="staff">Staff and admin sign in</button></div></div>'+
+  '<div class="ticket-wrap"><div class="ticket" aria-label="Example of a digital token"><div class="t-centre">Jamshoro Procurement Centre</div><div class="t-when">Today, 11 am–12 pm</div><div class="t-token">JAM-021</div><div class="t-crop">Wheat, 2,400 kg</div><div class="t-perf"></div>'+
+  '<div class="t-queue"><div class="t-ahead" id="tkAhead">3</div><div><strong id="tkLabel">farmers ahead</strong><br><span class="sm" id="tkEta" style="color:#6B6556">about 30 min</span></div></div>'+
+  '<div class="t-dots" aria-hidden="true"><span class="dot on"></span><span class="dot on"></span><span class="dot on"></span><span class="you">You</span></div></div></div></div>'+fieldScene(40)+'</section>'+
+
+  '<section class="section"><div class="wrap"><div class="sec-head rv"><h2>The queue moves from the gate to your phone</h2><p>Today a farmer arrives, joins a line and waits without knowing when the turn will come. Fasal Token replaces that guesswork with a booked slot and a visible queue.</p></div>'+
+  '<div class="compare rv"><div><h3>At the gate today</h3>'+lis(['Arrive early and stand in line with no idea of the wait','Paper slips and handwritten registers for weight and quality','No clear record of what was weighed or when','Payment status is unclear until you ask'])+'</div>'+
+  '<div><h3>With Fasal Token</h3>'+lis(['Choose a centre, date and time slot before leaving home','Receive a digital token and see how many farmers are ahead','Weight, quality grade and approval recorded once, in one place','Final weight, receipt and payment shown in your history'])+'</div></div></div></section>'+
+
+  '<section class="section alt" id="how"><div class="wrap"><div class="sec-head rv"><h2>One delivery, five steps</h2><p>This is what a farmer goes through from booking to payment.</p></div><ol class="steps rv">'+
+  step(0,'Register and book','Create an account, add crop and expected quantity, choose a centre, date and slot.')+
+  step(1,'Get your token','A digital token is issued instantly and stays on your phone.')+
+  step(2,'Arrive and check in','Staff check you in and add you to the queue. You can watch your position.')+
+  step(3,'Weigh and inspect','Your load is weighed, then graded for quality and moisture.')+
+  step(4,'Unload and get paid','After approval and unloading you get a receipt and your payment details.')+'</ol></div></section>'+
+
+  '<section class="section" id="roles"><div class="wrap"><div class="sec-head rv"><h2>Built for everyone at the centre</h2><p>Each person sees only what they need for their job. Try any role with the demo accounts.</p></div><div class="roles rv">'+
+  role(0,'farmer','Farmers',['Create an account','Register crop and expected quantity','Choose a centre, date and time slot','Receive a digital token','Track queue status','See history, final weight and payment'],'Try the farmer view')+
+  role(1,'staff','Centre staff',['See today’s farmer bookings','Check in arriving farmers','Manage the queue order','Record crop weight and quality','Confirm unloading and complete procurement','Generate receipts'],'Try the staff view')+
+  role(2,'inspector','Quality inspectors',['See assigned crop inspections','Record quality grade and remarks','Record moisture and other quality values','Approve or reject produce'],'Try the inspector view')+
+  role(3,'admin','Administrators',['Manage farmers and procurement centres','Set daily capacity','Manage crop categories','Monitor queues','View procurement reports','Analyze waiting times and crop intake'],'Try the admin view')+'</div></div></section>'+
+
+  '<section class="section alt" id="centres"><div class="wrap"><div class="sec-head rv"><h2>Centres right now</h2><p>Live from today’s sample bookings. Queue numbers change as staff check farmers in.</p></div><div class="centres rv">'+centres+'</div></div></section>'+
+
+  '<section class="band rv"><div class="wrap"><div><h2>Ready for the next delivery?</h2><p style="margin:10px 0 0;color:var(--muted)">Create a farmer account in under a minute.</p></div><button class="btn btn-primary btn-lg" data-act="go" data-page="login" data-role="farmer">Create an account</button></div></section></main>'+footer();
+}
+function loginPage(){
+  const role=S.ui.loginRole,mode=S.ui.loginMode;
+  let form;
+  if(role==='farmer'){
+    const tabs='<div class="tabs" role="tablist" style="margin-bottom:20px"><button class="tab '+(mode==='signin'?'on':'')+'" role="tab" data-act="authMode" data-mode="signin">Sign in</button><button class="tab '+(mode==='signup'?'on':'')+'" role="tab" data-act="authMode" data-mode="signup">Create account</button></div>';
+    if(mode==='signin'){
+      form=tabs+'<form data-form="farmerIn" novalidate><div id="authErr" class="err" hidden></div><div class="field"><label class="f" for="ph">Mobile number</label><input class="input" id="ph" name="phone" inputmode="tel" autocomplete="tel" value="'+(DEMO?'0300-1234567':'')+'"></div><div class="field"><label class="f" for="pw">Password</label><input class="input" id="pw" name="password" type="password" autocomplete="current-password" value="'+(DEMO?'demo123':'')+'"></div><button class="btn btn-primary btn-lg" style="width:100%">Sign in as farmer</button>'+(DEMO?'<p class="hint">Demo account is filled in: Ghulam Mustafa Khaskheli.</p>':'')+'</form>';
+    }else{
+      form=tabs+'<form data-form="farmerUp" novalidate><div id="authErr" class="err" hidden></div><div class="grid2"><div class="field"><label class="f" for="nm">Full name</label><input class="input" id="nm" name="name" autocomplete="name"></div><div class="field"><label class="f" for="ph2">Mobile number</label><input class="input" id="ph2" name="phone" inputmode="tel" placeholder="03XX-XXXXXXX"></div><div class="field"><label class="f" for="cn">CNIC (optional)</label><input class="input" id="cn" name="cnic" inputmode="numeric" placeholder="13 digits"></div><div class="field"><label class="f" for="vl">Village or town</label><input class="input" id="vl" name="village"></div><div class="field"><label class="f" for="ds">District</label><select class="select" id="ds" name="district">'+['Jamshoro','Hyderabad','Dadu','Matiari','Thatta','Tando Allahyar','Other'].map(d=>'<option>'+d+'</option>').join('')+'</select></div><div class="field"><label class="f" for="pw2">Password</label><input class="input" id="pw2" name="password" type="password" autocomplete="new-password"><div class="hint">At least 6 characters.</div></div></div><button class="btn btn-primary btn-lg" style="width:100%">Create account</button></form>';
+    }
+  }else{
+        const id={staff:'STAFF-101',inspector:'INSP-204',admin:'ADMIN-001'}[role];
+    form='<h3 style="margin-bottom:16px">Sign in as '+ROLES[role].label.toLowerCase()+'</h3><form data-form="staffIn" novalidate><div id="authErr" class="err" hidden></div><div class="field"><label class="f" for="uid">Employee ID</label><input class="input" id="uid" name="uid" value="'+(DEMO?id:'')+'"></div><div class="field"><label class="f" for="pw3">Password</label><input class="input" id="pw3" name="pw" type="password" value="'+(DEMO?'demo123':'')+'"></div><button class="btn btn-primary btn-lg" style="width:100%">Sign in</button>'+(DEMO?'<p class="hint">Demo credentials are filled in.</p>':'')+'</form>';
+  }
+  return pubHeader()+'<main class="wrap login"><div><h1 style="font-size:clamp(1.9rem,4vw,2.6rem)">Sign in to Fasal Token</h1><p class="muted" style="margin-top:10px">Choose how you use the system.</p><div class="rolelist" role="radiogroup" aria-label="Role">'+
+  Object.keys(ROLES).map(k=>'<button class="roleopt '+(k===role?'on':'')+'" role="radio" aria-checked="'+(k===role)+'" data-act="pickRole" data-role="'+k+'"><strong>'+ROLES[k].label+'</strong><span>'+ROLES[k].blurb+'</span></button>').join('')+'</div></div><div class="card">'+form+'</div></main>'+footer();
+}
+
+/* ================= portal chrome ================= */
+function currentUser(){return S.me||{name:''}}
+function portalHeader(){
+  const u=currentUser(),r=S.session.role;
+  return '<header class="topbar"><div class="wrap bar"><button class="brand" data-act="go" data-page="home" aria-label="Fasal Token home">'+logo()+'<span>Fasal Token</span></button>'+
+  '<div class="who"><span class="who-name">'+esc(u.name)+'</span><span class="who-role">'+ROLES[r].label+'</span></div>'+
+  '<button class="btn btn-ghost btn-sm" data-act="signout">Sign out</button></div></header>';
+}
+
+/* ================= FARMER ================= */
+const histOf=f=>S.bookings.filter(b=>b.farmerId===f.id&&!isActive(b)).sort((a,b)=>(b.date+pad(b.slot)).localeCompare(a.date+pad(a.slot)));
+const activeOf=f=>S.bookings.filter(b=>b.farmerId===f.id&&isActive(b)).sort((a,b)=>(a.date+pad(a.slot)).localeCompare(b.date+pad(b.slot)));
+function farmerView(){
+  const f=F(S.session.userId),act=activeOf(f),t=S.ui.farmerTab;
+  const body=t==='home'?fHome(f):t==='book'?fBook(f):t==='queue'?fQueue(f):fHistory(f);
+  return '<main class="wrap portal"><div class="page-h"><div><h1 style="font-size:clamp(1.6rem,3.5vw,2.2rem)">Assalam o Alaikum, '+esc(f.name.split(' ').slice(0,2).join(' '))+'</h1><p class="muted" style="margin:6px 0 0">'+esc(f.village)+', '+esc(f.district)+'</p></div><button class="btn btn-gold" data-act="tab" data-group="farmerTab" data-val="book">Book a procurement slot</button></div>'+
+  tabBar('farmerTab',[['home','My day',act.length||null],['book','Book a slot'],['queue','Queue status'],['history','History and payments']])+body+'</main>';
+}
+function fHome(f){
+  const act=activeOf(f),hist=histOf(f),done=hist.filter(b=>b.status==='completed');
+  const delivered=sum(done,b=>b.net),paid=sum(done.filter(b=>b.payment.status==='Paid'),b=>b.payment.amount),proc=sum(done.filter(b=>b.payment.status!=='Paid'),b=>b.payment.amount);
+  let main;
+  if(!act.length){main='<div class="card">'+empty('No upcoming delivery','Book a procurement slot to receive a digital token.')+'<div style="text-align:center"><button class="btn btn-primary" data-act="tab" data-group="farmerTab" data-val="book">Book a slot</button></div></div>'}
+  else{
+    const b=act[0],m=statusMsg(b);
+    main='<div class="active"><div>'+tokenCard(b)+'</div><div class="card"><div class="statusmsg"><strong>'+m[0]+'</strong>'+m[1]+'</div><div class="toolbar"><button class="btn btn-primary" data-act="track" data-id="'+b.id+'">Track queue</button>'+(b.status==='booked'?'<button class="btn btn-ghost" data-act="cancelBooking" data-id="'+b.id+'">Cancel booking</button>':'')+'</div>'+timeline(b)+'</div></div>';
+  }
+  const up=act.slice(1);
+  return '<div class="kpis">'+kpi('Deliveries completed',done.length)+kpi('Total delivered',tons(delivered))+kpi('Payments received',rs(paid))+kpi('Payment processing',rs(proc))+'</div>'+main+
+  (up.length?'<div class="card" style="margin-top:20px"><h3>Other bookings</h3><div class="tw"><table class="tbl"><thead><tr><th>Date</th><th>Slot</th><th>Token</th><th>Crop</th><th>Centre</th><th></th></tr></thead><tbody>'+up.map(b=>'<tr><td>'+fmtDate(b.date)+'</td><td>'+SLOTS[b.slot]+'</td><td><strong>'+b.token+'</strong></td><td>'+esc(K(b.cropId).name)+'</td><td>'+esc(C(b.centreId).name)+'</td><td><button class="link" data-act="track" data-id="'+b.id+'">Track</button></td></tr>').join('')+'</tbody></table></div></div>':'');
+}
+function bookState(){if(!S.ui.book)S.ui.book={crop:(S.crops.find(x=>x.active)||S.crops[0]||{}).id,qty:'',unit:'kg',centre:(S.centres.find(x=>x.open)||S.centres[0]||{}).id,date:TODAY,slot:null};return S.ui.book}
+function slotPassed(date,i){const h=new Date().getHours();return date===TODAY&&(8+i+1)<=h}
+function bookQtyKg(bk){const q=parseFloat(bk.qty);if(!(q>0))return 0;return Math.round(bk.unit==='maund'?q*40:q)}
+function fBook(f){
+  if(S.ui.booked){
+    const b=S.bookings.find(x=>x.id===S.ui.booked);
+    return '<div class="stack" style="max-width:640px"><div class="statusmsg"><strong>Booking confirmed</strong>Your digital token is ready. Show it to staff at the centre gate.</div>'+tokenCard(b)+'<div class="toolbar"><button class="btn btn-primary" data-act="track" data-id="'+b.id+'">Track queue status</button><button class="btn btn-ghost" data-act="bookAnother">Book another delivery</button></div></div>';
+  }
+  const bk=bookState(),c=C(bk.centre),k=K(bk.crop),q=bookQtyKg(bk);
+  const days=[0,1,2,3,4,5,6].map(i=>addDays(i));
+  const crops=S.crops.filter(x=>x.active);
+  const centreOpts=S.centres.map(x=>{const left=x.capacity-dayLoad(x.id,bk.date);const dis=!x.open||left<=0;return '<button class="opt '+(bk.centre===x.id?'on':'')+'" data-act="pickCentre" data-id="'+x.id+'" '+(dis?'disabled':'')+' aria-pressed="'+(bk.centre===x.id)+'"><div><strong>'+esc(x.name)+'</strong><span class="sm muted">'+esc(x.district)+' district. '+(!x.open?'Closed for bookings':left<=0?'Fully booked on this date':left+' bookings left on this date')+'</span></div></button>'}).join('');
+  const slotOpts=SLOTS.map((s,i)=>{const left=slotCap(c)-slotLoad(bk.centre,bk.date,i),pas=slotPassed(bk.date,i),dis=left<=0||pas;return '<button class="pill '+(bk.slot===i?'on':'')+'" data-act="pickSlot" data-slot="'+i+'" '+(dis?'disabled':'')+' aria-pressed="'+(bk.slot===i)+'">'+s+'<small>'+(pas?'Passed':left<=0?'Full':left+' left')+'</small></button>'}).join('');
+  const est=q?rs(q/40*k.rate):'Enter quantity';
+  return '<div class="fl"><div class="stack">'+
+  '<div class="card"><h3>1. Crop and quantity</h3><div class="grid2"><div class="field"><label class="f" for="bCrop">Crop</label><select class="select" id="bCrop" data-bind="book.crop" data-render>'+crops.map(x=>'<option value="'+x.id+'" '+(x.id===bk.crop?'selected':'')+'>'+esc(x.name)+'</option>').join('')+'</select><div class="hint">Moisture limit '+k.maxMoist+'%. Sample rate '+rs(k.rate)+' per 40 kg.</div></div>'+
+  '<div class="field"><label class="f" for="bQty">Expected quantity</label><div style="display:flex;gap:8px"><input class="input" id="bQty" type="number" min="1" step="any" inputmode="decimal" data-bind="book.qty" data-live="qty" value="'+esc(bk.qty)+'" placeholder="e.g. 2400"><select class="select" style="width:110px" aria-label="Unit" data-bind="book.unit" data-render><option value="kg" '+(bk.unit==='kg'?'selected':'')+'>kg</option><option value="maund" '+(bk.unit==='maund'?'selected':'')+'>maund</option></select></div><div class="hint" id="qtyHint">'+(q?kg(q)+' ('+(q/40).toFixed(1)+' maunds)':'1 maund = 40 kg')+'</div></div></div></div>'+
+  '<div class="card"><h3>2. Procurement centre</h3><div class="stack" style="gap:10px">'+centreOpts+'</div></div>'+
+  '<div class="card"><h3>3. Date and time slot</h3><div class="pills" style="margin-bottom:16px">'+days.map(d=>{const p=d.split('-').map(Number),dt=new Date(p[0],p[1]-1,p[2]);return '<button class="pill '+(bk.date===d?'on':'')+'" data-act="pickDate" data-date="'+d+'" aria-pressed="'+(bk.date===d)+'">'+dt.toLocaleDateString('en-GB',{weekday:'short'})+'<small>'+dt.getDate()+' '+dt.toLocaleDateString('en-GB',{month:'short'})+'</small></button>'}).join('')+'</div><div class="slots">'+slotOpts+'</div></div></div>'+
+  '<div class="card sum sticky"><h3>Booking summary</h3><dl><dt>Crop</dt><dd>'+esc(k.name)+'</dd><dt>Expected quantity</dt><dd id="sumQty">'+(q?kg(q):'Not entered')+'</dd><dt>Centre</dt><dd>'+esc(c.name)+'</dd><dt>Date and slot</dt><dd>'+(bk.date===TODAY?'Today':fmtDate(bk.date))+', '+(bk.slot==null?'choose a slot':SLOTS[bk.slot])+'</dd><dt>Estimated value</dt><dd id="sumEst">'+est+'</dd></dl><p class="hint">Estimate uses the sample rate. Final payment depends on net weight and quality grade.</p><button class="btn btn-primary btn-lg" style="width:100%" data-act="confirmBook">Confirm booking</button></div></div>';
+}
+function fQueue(f){
+  const act=activeOf(f);
+  if(!act.length)return '<div class="card">'+empty('Nothing to track','Once you book a slot, your token and live queue position appear here.')+'</div>';
+  const b=act.find(x=>x.id===S.ui.selBooking)||act[0],q=queueOf(b.centreId,b.date),idx=q.findIndex(x=>x.id===b.id),m=statusMsg(b);
+  const calling=q[0];
+  let line='';
+  if(idx>=0){line='<div class="qline" role="img" aria-label="'+idx+' farmers ahead of you">'+q.slice(0,idx).map((x,i)=>'<span class="qdot qdone" style="--k:'+i+'" title="'+x.token+'">'+(i+1)+'</span>').join('')+'<span class="qyou">You: '+b.token+'</span></div>'}
+  const cq=queueOf(b.centreId,b.date).length,insp=S.bookings.filter(x=>x.centreId===b.centreId&&x.date===b.date&&x.status==='inspection').length,dn=S.bookings.filter(x=>x.centreId===b.centreId&&x.date===b.date&&x.status==='completed').length;
+  return (act.length>1?'<div class="toolbar"><label class="f" for="selB" style="margin:0">Booking</label><select class="select" id="selB" data-bind="selBooking" data-render>'+act.map(x=>'<option value="'+x.id+'" '+(x.id===b.id?'selected':'')+'>'+x.token+', '+fmtDate(x.date)+'</option>').join('')+'</select></div>':'')+
+  '<div class="cols2"><div class="stack"><div class="card"><div class="statusmsg"><strong>'+m[0]+'</strong>'+m[1]+'</div>'+
+  (idx>=0?'<h4>Farmers ahead of you</h4>'+line+'<div class="kpis" style="margin:0"><div class="kpi"><div class="kpi-v">'+(idx===0?'Next':idx)+'</div><div class="kpi-l">'+(idx===0?'your turn':'ahead of you')+'</div></div><div class="kpi"><div class="kpi-v">'+(idx===0?'0':idx*SERVICE_MIN)+' min</div><div class="kpi-l">estimated wait</div></div></div>':'')+
+  '<div class="toolbar" style="margin-top:14px"><button class="btn btn-ghost btn-sm" data-act="refresh">Refresh status</button><button class="btn btn-ghost btn-sm" data-act="detail" data-id="'+b.id+'">Booking details</button></div></div>'+
+  '<div class="card"><h3>'+esc(C(b.centreId).name)+'</h3><div class="kpis" style="margin:0"><div class="kpi"><div class="kpi-v">'+(calling?calling.token:'None')+'</div><div class="kpi-l">now calling</div></div><div class="kpi"><div class="kpi-v">'+cq+'</div><div class="kpi-l">in queue</div></div><div class="kpi"><div class="kpi-v">'+insp+'</div><div class="kpi-l">at inspection</div></div><div class="kpi"><div class="kpi-v">'+dn+'</div><div class="kpi-l">completed today</div></div></div></div></div>'+
+  '<div class="card"><h3>Your progress</h3>'+timeline(b)+'</div></div>';
+}
+function fHistory(f){
+  const h=histOf(f),done=h.filter(b=>b.status==='completed'),n=S.ui.histAll?h.length:12;
+  if(!h.length)return '<div class="card">'+empty('No history yet','Completed deliveries, final weights and payments will appear here.')+'</div>';
+  const paid=sum(done.filter(b=>b.payment.status==='Paid'),b=>b.payment.amount),proc=sum(done.filter(b=>b.payment.status!=='Paid'),b=>b.payment.amount);
+  return '<div class="kpis">'+kpi('Deliveries',done.length)+kpi('Total delivered',tons(sum(done,b=>b.net)))+kpi('Paid',rs(paid))+kpi('Processing',rs(proc))+'</div><div class="card"><div class="tw"><table class="tbl"><thead><tr><th>Date</th><th>Token</th><th>Crop</th><th class="num">Expected</th><th class="num">Final weight</th><th>Grade</th><th class="num">Payment</th><th>Status</th><th></th></tr></thead><tbody>'+
+  h.slice(0,n).map(b=>'<tr><td>'+fmtDate(b.date)+'</td><td><strong>'+b.token+'</strong></td><td>'+esc(K(b.cropId).name)+'</td><td class="num">'+kg(b.qty)+'</td><td class="num">'+(b.net?kg(b.net):'-')+'</td><td>'+(b.quality?b.quality.grade:'-')+'</td><td class="num">'+(b.payment?rs(b.payment.amount):'-')+'</td><td>'+(b.status==='completed'?'<span class="chip '+(b.payment.status==='Paid'?'chip-done':'chip-info')+'">'+b.payment.status+'</span>':chip(b.status))+'</td><td><button class="link" data-act="detail" data-id="'+b.id+'">Details</button></td></tr>').join('')+'</tbody></table></div>'+(h.length>12&&!S.ui.histAll?'<div style="text-align:center;margin-top:12px"><button class="btn btn-ghost btn-sm" data-act="histAll">Show all '+h.length+'</button></div>':'')+'</div>';
+}
+
+/* ================= STAFF ================= */
+function staffView(){
+  const s=S.me,c=C(s.centreId),date=S.ui.staffDate||TODAY;
+  const all=S.bookings.filter(b=>b.centreId===c.id&&b.date===date&&b.status!=='cancelled');
+  const q=queueOf(c.id,date),t=S.ui.staffTab;
+  const toUnload=all.filter(b=>b.status==='approved'||b.status==='unloaded');
+  const kp='<div class="kpis">'+kpi('Bookings',all.length,'of '+c.capacity+' capacity')+kpi('Waiting in queue',q.length,'about '+q.length*SERVICE_MIN+' min')+kpi('At inspection',all.filter(b=>b.status==='inspection').length)+kpi('Ready to unload',toUnload.length)+kpi('Completed',all.filter(b=>b.status==='completed').length)+kpi('Received',tons(sum(all.filter(received),b=>b.net)))+'</div>';
+  let body;
+  if(t==='bookings')body=sBookings(all);else if(t==='queue')body=sQueue(c,date);else if(t==='unload')body=sUnload(toUnload);else body=sReceipts(all);
+  return '<main class="wrap portal"><div class="page-h"><div><h1 style="font-size:clamp(1.6rem,3.5vw,2.2rem)">'+esc(c.name)+'</h1><p class="muted" style="margin:6px 0 0">Signed in as '+esc(s.name)+'</p></div><div><label class="sr" for="sDate">Date</label><input class="input" id="sDate" type="date" value="'+date+'" data-bind="staffDate" data-render style="width:auto"></div></div>'+kp+
+  tabBar('staffTab',[['bookings',date===TODAY?'Today’s bookings':'Bookings',all.length],['queue','Queue',q.length],['unload','Unloading',toUnload.length],['receipts','Receipts']])+body+'</main>';
+}
+function staffAction(b){
+  const id=' data-id="'+b.id+'"';
+  switch(b.status){
+    case 'booked':return '<button class="btn btn-primary btn-sm" data-act="checkIn"'+id+'>Check in</button>';
+    case 'checked_in':return '<button class="btn btn-gold btn-sm" data-act="openWeigh"'+id+'>Record weight</button>';
+    case 'inspection':return '<span class="muted sm">With inspector</span>';
+    case 'approved':return '<button class="btn btn-primary btn-sm" data-act="unload"'+id+'>Confirm unloading</button>';
+    case 'unloaded':return '<button class="btn btn-primary btn-sm" data-act="complete"'+id+'>Complete procurement</button>';
+    case 'completed':return '<button class="btn btn-ghost btn-sm" data-act="genReceipt"'+id+'>'+(b.receiptNo?'View receipt':'Generate receipt')+'</button>';
+    case 'rejected':return '<button class="btn btn-ghost btn-sm" data-act="detail"'+id+'>View reason</button>';
+    default:return '';
+  }
+}
+function sBookings(all){
+  const qq=(S.ui.staffQ||'').toLowerCase(),st=S.ui.staffStatus;
+  const rows=all.filter(b=>(st==='all'||b.status===st)&&(!qq||(b.token+F(b.farmerId).name+F(b.farmerId).phone+K(b.cropId).name).toLowerCase().includes(qq))).sort((a,b)=>a.slot-b.slot||a.token.localeCompare(b.token));
+  return '<div class="card"><div class="toolbar"><label class="sr" for="staffQ">Search</label><input class="input" id="staffQ" type="search" placeholder="Search token, farmer or crop" value="'+esc(S.ui.staffQ)+'" data-bind="staffQ" data-render><label class="sr" for="staffSt">Status</label><select class="select" id="staffSt" data-bind="staffStatus" data-render><option value="all">All statuses</option>'+Object.keys(STATUS).map(k=>'<option value="'+k+'" '+(st===k?'selected':'')+'>'+STATUS[k][0]+'</option>').join('')+'</select></div>'+
+  (rows.length?'<div class="tw"><table class="tbl"><thead><tr><th>Slot</th><th>Token</th><th>Farmer</th><th>Crop</th><th class="num">Expected</th><th>Status</th><th>Next step</th></tr></thead><tbody>'+rows.map(b=>'<tr><td>'+SLOTS[b.slot]+'</td><td><button class="link" data-act="detail" data-id="'+b.id+'">'+b.token+'</button></td><td>'+esc(F(b.farmerId).name)+'<div class="xs muted">'+esc(F(b.farmerId).phone)+'</div></td><td>'+esc(K(b.cropId).name)+'</td><td class="num">'+kg(b.qty)+'</td><td>'+chip(b.status)+'</td><td>'+staffAction(b)+'</td></tr>').join('')+'</tbody></table></div>':empty('No bookings match','Try a different search or status filter.'))+'</div>';
+}
+function sQueue(c,date){
+  const q=queueOf(c.id,date),arr=S.bookings.filter(b=>b.centreId===c.id&&b.date===date&&b.status==='booked').sort((a,b)=>a.slot-b.slot);
+  const now=Date.now();
+  return '<div class="cols2"><div class="card"><h3>Queue order</h3>'+(q.length?q.map((b,i)=>'<div class="qrow"><div class="qpos">'+(i+1)+'</div><div><strong>'+b.token+'</strong> '+esc(F(b.farmerId).name)+'<div class="sm muted">'+esc(K(b.cropId).name)+', '+kg(b.qty)+'. Waiting '+Math.max(0,Math.round((now-b.checkInAt)/60000))+' min</div></div><div class="qact"><button class="btn btn-ghost btn-sm" data-act="qMove" data-id="'+b.id+'" data-dir="-1" '+(i===0?'disabled':'')+' aria-label="Move up">Up</button><button class="btn btn-ghost btn-sm" data-act="qMove" data-id="'+b.id+'" data-dir="1" '+(i===q.length-1?'disabled':'')+' aria-label="Move down">Down</button>'+(i>0?'<button class="btn btn-ghost btn-sm" data-act="qFront" data-id="'+b.id+'">To front</button>':'')+(q.length>1&&i<q.length-1?'<button class="btn btn-ghost btn-sm" data-act="qSkip" data-id="'+b.id+'">Skip</button>':'')+'<button class="btn '+(i===0?'btn-gold':'btn-primary')+' btn-sm" data-act="openWeigh" data-id="'+b.id+'">Weigh now</button></div></div>').join(''):empty('Queue is empty','Check in arriving farmers to add them here.'))+'</div>'+
+  '<div class="card"><h3>Expected arrivals</h3>'+(arr.length?arr.map(b=>'<div class="qrow" style="grid-template-columns:1fr auto"><div><strong>'+b.token+'</strong> '+esc(F(b.farmerId).name)+'<div class="sm muted">'+SLOTS[b.slot]+', '+esc(K(b.cropId).name)+', '+kg(b.qty)+'</div></div><button class="btn btn-primary btn-sm" data-act="checkIn" data-id="'+b.id+'">Check in</button></div>').join(''):empty('Nobody left to arrive','All booked farmers have been checked in.'))+'</div></div>';
+}
+function sUnload(list){
+  if(!list.length)return '<div class="card">'+empty('Nothing waiting at the unloading bay','Approved loads appear here after the inspector signs off.')+'</div>';
+  return '<div class="card"><div class="tw"><table class="tbl"><thead><tr><th>Token</th><th>Farmer</th><th>Crop</th><th class="num">Net weight</th><th>Grade</th><th>Status</th><th>Next step</th></tr></thead><tbody>'+list.map(b=>'<tr><td><button class="link" data-act="detail" data-id="'+b.id+'">'+b.token+'</button></td><td>'+esc(F(b.farmerId).name)+'</td><td>'+esc(K(b.cropId).name)+'</td><td class="num">'+kg(b.net)+'</td><td>'+b.quality.grade+'</td><td>'+chip(b.status)+'</td><td>'+staffAction(b)+'</td></tr>').join('')+'</tbody></table></div></div>';
+}
+function sReceipts(all){
+  const l=all.filter(b=>b.status==='completed');
+  if(!l.length)return '<div class="card">'+empty('No completed procurements yet','Complete a procurement to generate its receipt.')+'</div>';
+  return '<div class="card"><div class="tw"><table class="tbl"><thead><tr><th>Token</th><th>Farmer</th><th>Crop</th><th class="num">Net weight</th><th class="num">Amount</th><th>Receipt</th><th></th></tr></thead><tbody>'+l.map(b=>'<tr><td>'+b.token+'</td><td>'+esc(F(b.farmerId).name)+'</td><td>'+esc(K(b.cropId).name)+'</td><td class="num">'+kg(b.net)+'</td><td class="num">'+rs(b.payment.amount)+'</td><td>'+(b.receiptNo||'Not generated')+'</td><td>'+staffAction(b)+'</td></tr>').join('')+'</tbody></table></div></div>';
+}
+
+/* ================= INSPECTOR ================= */
+function inspectorView(){
+  const i=S.me,t=S.ui.inspTab;
+  const pend=S.bookings.filter(b=>b.status==='inspection'&&b.inspectorId===i.id).sort((a,b)=>a.weighedAt-b.weighedAt);
+  const log=S.bookings.filter(b=>b.quality&&b.inspectorId===i.id).sort((a,b)=>b.quality.at-a.quality.at);
+  const todayLog=log.filter(b=>b.date===TODAY);
+  const kp='<div class="kpis">'+kpi('Waiting for you',pend.length)+kpi('Inspected today',todayLog.length)+kpi('Approved today',todayLog.filter(b=>b.quality.decision==='approve').length)+kpi('Rejected today',todayLog.filter(b=>b.quality.decision==='reject').length)+'</div>';
+  let body;
+  if(t==='pending'){
+    body=pend.length?'<div class="stack">'+pend.map(b=>{const k=K(b.cropId);return '<div class="card"><div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between;align-items:center"><div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><h3 style="margin:0">'+b.token+'</h3>'+chip(b.status)+'</div><div style="margin-top:6px"><strong>'+esc(F(b.farmerId).name)+'</strong>, '+esc(k.name)+'</div><div class="sm muted">Net weight '+kg(b.net)+'. Moisture limit '+k.maxMoist+'%. Weighed '+fmtTime(b.weighedAt)+'.</div>'+(b.visual?'<div class="sm" style="margin-top:6px">Intake check: '+esc(b.visual)+(b.staffNote?'. '+esc(b.staffNote):'')+'</div>':'')+'</div><button class="btn btn-primary" data-act="openInspect" data-id="'+b.id+'">Start inspection</button></div></div>'}).join('')+'</div>':'<div class="card">'+empty('No inspections waiting','New loads appear here as soon as staff record their weight.')+'</div>';
+  }else{
+    body=log.length?'<div class="card"><div class="tw"><table class="tbl"><thead><tr><th>Date</th><th>Token</th><th>Crop</th><th>Grade</th><th class="num">Moisture</th><th>Decision</th><th>Remarks</th></tr></thead><tbody>'+log.slice(0,25).map(b=>'<tr><td>'+fmtDate(b.date)+'</td><td><button class="link" data-act="detail" data-id="'+b.id+'">'+b.token+'</button></td><td>'+esc(K(b.cropId).name)+'</td><td>'+b.quality.grade+'</td><td class="num">'+b.quality.moisture+'%</td><td>'+(b.quality.decision==='approve'?'<span class="chip chip-ok">Approved</span>':'<span class="chip chip-bad">Rejected</span>')+'</td><td class="sm">'+esc(b.quality.remarks||'')+'</td></tr>').join('')+'</tbody></table></div></div>':'<div class="card">'+empty('No inspections yet','Your completed inspections will be listed here.')+'</div>';
+  }
+  return '<main class="wrap portal"><div class="page-h"><div><h1 style="font-size:clamp(1.6rem,3.5vw,2.2rem)">Quality inspections</h1><p class="muted" style="margin:6px 0 0">'+esc(i.name)+', '+esc(C(i.centreId).name)+'</p></div></div>'+kp+tabBar('inspTab',[['pending','Assigned to me',pend.length],['done','Inspection log']])+body+'</main>';
+}
+
+/* ================= ADMIN ================= */
+function adminView(){
+  const t=S.ui.adminTab;
+  const tabs=[['overview','Overview'],['queues','Queues'],['farmers','Farmers'],['centres','Centres and capacity'],['crops','Crop categories'],['reports','Reports']];
+  const body={overview:aOverview,queues:aQueues,farmers:aFarmers,centres:aCentres,crops:aCrops,reports:aReports}[t]();
+  return '<main class="wrap portal"><div class="page-h"><div><h1 style="font-size:clamp(1.6rem,3.5vw,2.2rem)">Administration</h1><p class="muted" style="margin:6px 0 0">'+esc(S.admin.name)+', '+esc(S.admin.title)+'</p></div></div>'+tabBar('adminTab',tabs)+body+'</main>';
+}
+const waitAvg=l=>avg(l.filter(b=>b.waitMin!=null).map(b=>b.waitMin));
+function aOverview(){
+  const today=S.bookings.filter(b=>b.date===TODAY&&b.status!=='cancelled');
+  const recent=S.bookings.filter(b=>b.date>=addDays(-9));
+  const days=[];for(let i=-6;i<=0;i++){const d=addDays(i),p=d.split('-').map(Number);days.push({l:new Date(p[0],p[1]-1,p[2]).toLocaleDateString('en-GB',{weekday:'short'}),v:sum(S.bookings.filter(b=>b.date===d&&received(b)),b=>b.net)/1000})}
+  const byCrop=S.crops.map(k=>({l:k.name,v:sum(recent.filter(b=>b.cropId===k.id&&received(b)),b=>b.net)/1000})).sort((a,b)=>b.v-a.v);
+  const byC=S.centres.map(c=>({l:c.name.replace(' Procurement Centre','').replace(' Grain Market Centre','').replace(' Storage Centre',''),v:waitAvg(recent.filter(b=>b.centreId===c.id))}));
+  return '<div class="kpis">'+kpi('Bookings today',today.length,'across '+S.centres.filter(c=>c.open).length+' open centres')+kpi('Received today',tons(sum(today.filter(received),b=>b.net)))+kpi('In queue now',sum(S.centres,c=>queueOf(c.id,TODAY).length))+kpi('Average wait',waitAvg(recent)+' min','last 10 days')+kpi('Registered farmers',S.farmers.length)+'</div>'+
+  '<div class="cols2"><div class="card"><h3>Crop intake, last 7 days (tonnes)</h3>'+cols(days,v=>v.toFixed(1),true)+'</div><div class="card"><h3>Crop intake by category, last 10 days</h3>'+hbars(byCrop,v=>v.toFixed(1)+' t')+'</div></div><div class="card" style="margin-top:20px"><h3>Average waiting time by centre, last 10 days</h3>'+hbars(byC,v=>v+' min')+'</div>';
+}
+function aQueues(){
+  return '<div class="cols2">'+S.centres.map(c=>{
+    const q=queueOf(c.id,TODAY),load=dayLoad(c.id,TODAY),pct=Math.min(100,Math.round(load/c.capacity*100)),cap=slotCap(c);
+    const sl=SLOTS.map((s,i)=>({l:s.replace(' am','').replace(' pm','').replace('–','-'),v:slotLoad(c.id,TODAY,i)}));
+    return '<div class="card"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><h3>'+esc(c.name)+'</h3>'+(c.open?'<span class="chip chip-ok">Open</span>':'<span class="chip chip-mute">Closed</span>')+'</div>'+
+    '<div class="kpis" style="margin:0 0 14px"><div class="kpi"><div class="kpi-v">'+q.length+'</div><div class="kpi-l">in queue</div></div><div class="kpi"><div class="kpi-v">'+q.length*SERVICE_MIN+' min</div><div class="kpi-l">estimated wait</div></div></div>'+
+    '<div class="sm">Daily capacity used: '+load+' of '+c.capacity+'</div><div class="meter '+(pct>80?'hot':'')+'"><span style="--w:'+pct+'%"></span></div>'+
+    '<div class="sm muted" style="margin:12px 0 0">Bookings per slot (limit '+cap+')</div><div class="mini">'+cols(sl,v=>v,false)+'</div>'+
+    '<div class="sm" style="margin-top:12px"><strong>Next up:</strong> '+(q.length?q.slice(0,3).map(b=>b.token).join(', '):'nobody waiting')+'</div></div>';
+  }).join('')+'</div>';
+}
+function aFarmers(){
+  const qq=(S.ui.farmerQ||'').toLowerCase();
+  const rows=S.farmers.filter(f=>!qq||(f.name+f.phone+f.village).toLowerCase().includes(qq));
+  return '<div class="cols2" style="grid-template-columns:2fr 1fr;align-items:start"><div class="card"><div class="toolbar"><label class="sr" for="fq">Search farmers</label><input class="input" id="fq" type="search" placeholder="Search name, phone or village" value="'+esc(S.ui.farmerQ)+'" data-bind="farmerQ" data-render></div><div class="tw"><table class="tbl"><thead><tr><th>Farmer</th><th>Village</th><th class="num">Deliveries</th><th class="num">Delivered</th><th>Status</th><th></th></tr></thead><tbody>'+
+  rows.map(f=>{const d=S.bookings.filter(b=>b.farmerId===f.id&&b.status==='completed');return '<tr><td><strong>'+esc(f.name)+'</strong><div class="xs muted">'+esc(f.phone)+'</div></td><td>'+esc(f.village)+'</td><td class="num">'+d.length+'</td><td class="num">'+tons(sum(d,b=>b.net))+'</td><td>'+(f.status==='active'?'<span class="chip chip-ok">Active</span>':'<span class="chip chip-bad">Suspended</span>')+'</td><td><button class="btn btn-ghost btn-sm" data-act="toggleFarmer" data-id="'+f.id+'">'+(f.status==='active'?'Suspend':'Reactivate')+'</button></td></tr>'}).join('')+'</tbody></table></div></div>'+
+  '<div class="card"><h3>Add a farmer</h3><form data-form="addFarmer" novalidate><div id="authErr" class="err" hidden></div><div class="field"><label class="f" for="af1">Full name</label><input class="input" id="af1" name="name"></div><div class="field"><label class="f" for="af2">Mobile number</label><input class="input" id="af2" name="phone" inputmode="tel" placeholder="03XX-XXXXXXX"></div><div class="field"><label class="f" for="af3">Village or town</label><input class="input" id="af3" name="village"></div><button class="btn btn-primary" style="width:100%">Add farmer</button><p class="hint">The password is set to demo123 until the farmer changes it.</p></form></div></div>';
+}
+function aCentres(){
+  return '<div class="cols2" style="grid-template-columns:2fr 1fr;align-items:start"><div class="card"><h3>Procurement centres</h3><div class="tw"><table class="tbl"><thead><tr><th>Centre</th><th>Today</th><th>Daily capacity</th><th>Status</th></tr></thead><tbody>'+
+  S.centres.map(c=>'<tr><td><strong>'+esc(c.name)+'</strong><div class="xs muted">'+esc(c.district)+' ('+c.code+')</div></td><td>'+dayLoad(c.id,TODAY)+' booked</td><td><div style="display:flex;gap:6px;align-items:center"><label class="sr" for="cap-'+c.id+'">Capacity for '+esc(c.name)+'</label><input class="input" id="cap-'+c.id+'" type="number" min="8" max="400" value="'+c.capacity+'" style="width:90px;min-height:36px"><button class="btn btn-ghost btn-sm" data-act="saveCap" data-id="'+c.id+'">Save</button></div><div class="xs muted" style="margin-top:4px">'+slotCap(c)+' per slot</div></td><td><button class="btn btn-ghost btn-sm" data-act="toggleCentre" data-id="'+c.id+'">'+(c.open?'Close bookings':'Open bookings')+'</button></td></tr>').join('')+'</tbody></table></div></div>'+
+  '<div class="card"><h3>Add a centre</h3><form data-form="addCentre" novalidate><div id="authErr" class="err" hidden></div><div class="field"><label class="f" for="ac1">Centre name</label><input class="input" id="ac1" name="name"></div><div class="field"><label class="f" for="ac2">District</label><input class="input" id="ac2" name="district"></div><div class="field"><label class="f" for="ac3">Daily capacity (bookings)</label><input class="input" id="ac3" name="capacity" type="number" min="8" value="32"></div><button class="btn btn-primary" style="width:100%">Add centre</button></form></div></div>';
+}
+function aCrops(){
+  return '<div class="cols2" style="grid-template-columns:2fr 1fr;align-items:start"><div class="card"><h3>Crop categories</h3><div class="tw"><table class="tbl"><thead><tr><th>Crop</th><th>Sample rate (Rs per 40 kg)</th><th>Max moisture %</th><th>Status</th><th></th></tr></thead><tbody>'+
+  S.crops.map(k=>'<tr><td><strong>'+esc(k.name)+'</strong></td><td><label class="sr" for="rate-'+k.id+'">Rate for '+esc(k.name)+'</label><input class="input" id="rate-'+k.id+'" type="number" min="1" value="'+k.rate+'" style="width:110px;min-height:36px"></td><td><label class="sr" for="moist-'+k.id+'">Moisture limit for '+esc(k.name)+'</label><input class="input" id="moist-'+k.id+'" type="number" min="1" max="30" step=".5" value="'+k.maxMoist+'" style="width:80px;min-height:36px"></td><td>'+(k.active?'<span class="chip chip-ok">Accepting</span>':'<span class="chip chip-mute">Paused</span>')+'</td><td style="white-space:nowrap"><button class="btn btn-ghost btn-sm" data-act="saveCrop" data-id="'+k.id+'">Save</button> <button class="btn btn-ghost btn-sm" data-act="toggleCrop" data-id="'+k.id+'">'+(k.active?'Pause':'Resume')+'</button></td></tr>').join('')+'</tbody></table></div></div>'+
+  '<div class="card"><h3>Add a crop</h3><form data-form="addCrop" novalidate><div id="authErr" class="err" hidden></div><div class="field"><label class="f" for="ak1">Crop name</label><input class="input" id="ak1" name="name"></div><div class="field"><label class="f" for="ak2">Sample rate (Rs per 40 kg)</label><input class="input" id="ak2" name="rate" type="number" min="1"></div><div class="field"><label class="f" for="ak3">Max moisture %</label><input class="input" id="ak3" name="moist" type="number" step=".5" value="12"></div><button class="btn btn-primary" style="width:100%">Add crop</button></form></div></div>';
+}
+function aReports(){
+  const r=S.ui.rep=S.ui.rep||{from:addDays(-9),to:TODAY,centre:'all',crop:'all'};
+  const rows=S.bookings.filter(b=>b.date>=r.from&&b.date<=r.to&&(r.centre==='all'||b.centreId===r.centre)&&(r.crop==='all'||b.cropId===r.crop)&&b.status!=='cancelled');
+  const rec=rows.filter(received),rej=rows.filter(b=>b.status==='rejected'),comp=rows.filter(b=>b.status==='completed');
+  const bySlot=SLOTS.map((s,i)=>({l:s.replace(' am','').replace(' pm','').replace('–','-'),v:waitAvg(rows.filter(b=>b.slot===i))}));
+  const cropRows=S.crops.map(k=>{const x=rows.filter(b=>b.cropId===k.id);if(!x.length)return '';const ins=x.filter(b=>b.quality);return '<tr><td>'+esc(k.name)+'</td><td class="num">'+x.length+'</td><td class="num">'+tons(sum(x.filter(received),b=>b.net))+'</td><td class="num">'+x.filter(b=>b.status==='rejected').length+'</td><td class="num">'+(ins.length?(sum(ins,b=>b.quality.moisture)/ins.length).toFixed(1)+'%':'-')+'</td><td class="num">'+rs(sum(x.filter(b=>b.payment),b=>b.payment.amount))+'</td></tr>'}).join('');
+  const cRows=S.centres.map(c=>{const x=rows.filter(b=>b.centreId===c.id);if(!x.length)return '';return '<tr><td>'+esc(c.name)+'</td><td class="num">'+x.length+'</td><td class="num">'+tons(sum(x.filter(received),b=>b.net))+'</td><td class="num">'+(waitAvg(x)||'-')+' min</td><td class="num">'+(x.filter(b=>b.quality).length?Math.round(x.filter(b=>b.status==='rejected').length/x.filter(b=>b.quality).length*100):0)+'%</td></tr>'}).join('');
+  return '<div class="card" style="margin-bottom:20px"><div class="toolbar" style="margin:0"><div><label class="f" for="r1">From</label><input class="input" id="r1" type="date" value="'+r.from+'" data-bind="rep.from" data-render></div><div><label class="f" for="r2">To</label><input class="input" id="r2" type="date" value="'+r.to+'" data-bind="rep.to" data-render></div><div><label class="f" for="r3">Centre</label><select class="select" id="r3" data-bind="rep.centre" data-render><option value="all">All centres</option>'+S.centres.map(c=>'<option value="'+c.id+'" '+(r.centre===c.id?'selected':'')+'>'+esc(c.name)+'</option>').join('')+'</select></div><div><label class="f" for="r4">Crop</label><select class="select" id="r4" data-bind="rep.crop" data-render><option value="all">All crops</option>'+S.crops.map(c=>'<option value="'+c.id+'" '+(r.crop===c.id?'selected':'')+'>'+esc(c.name)+'</option>').join('')+'</select></div></div></div>'+
+  '<div class="kpis">'+kpi('Bookings',rows.length)+kpi('Crop received',tons(sum(rec,b=>b.net)))+kpi('Rejected loads',rej.length)+kpi('Average wait',(waitAvg(rows)||0)+' min')+kpi('Payments due or paid',rs(sum(comp,b=>b.payment.amount)))+'</div>'+
+  '<div class="cols2"><div class="card"><h3>Crop intake by category</h3><div class="tw"><table class="tbl"><thead><tr><th>Crop</th><th class="num">Bookings</th><th class="num">Received</th><th class="num">Rejected</th><th class="num">Avg moisture</th><th class="num">Payments</th></tr></thead><tbody>'+(cropRows||'<tr><td colspan="6">No data for this filter.</td></tr>')+'</tbody></table></div></div>'+
+  '<div class="card"><h3>Centre performance</h3><div class="tw"><table class="tbl"><thead><tr><th>Centre</th><th class="num">Bookings</th><th class="num">Received</th><th class="num">Avg wait</th><th class="num">Rejection</th></tr></thead><tbody>'+(cRows||'<tr><td colspan="5">No data for this filter.</td></tr>')+'</tbody></table></div></div></div>'+
+  '<div class="card" style="margin-top:20px"><h3>Waiting time by booked slot (minutes)</h3><p class="muted sm">Longer bars show the slots where farmers wait most. Consider lowering slot limits there.</p>'+cols(bySlot,v=>v,true)+'</div>';
+}
+
+/* ================= modals ================= */
+let lastFocus=null;
+function openModal(title,body,cls){
+  const m=$('#modal');
+  m.innerHTML='<div class="scrim" data-act="closeModal"></div><div class="dialog '+(cls||'')+'" role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="dlg-h"><h2 id="mTitle" style="font-size:1.3rem">'+title+'</h2><button class="x" data-act="closeModal" aria-label="Close">&times;</button></div><div class="dlg-b">'+body+'</div></div>';
+  m.hidden=false;lastFocus=document.activeElement;document.body.classList.add('lock');
+  const f=m.querySelector('input:not([type=radio]),select,textarea,.dlg-b .btn');if(f)f.focus();
+}
+function closeModal(){const m=$('#modal');m.hidden=true;m.innerHTML='';document.body.classList.remove('lock');if(lastFocus&&lastFocus.focus&&document.contains(lastFocus))lastFocus.focus()}
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2800)}
+function detailModal(b){
+  const f=F(b.farmerId),k=K(b.cropId),c=C(b.centreId),q=b.quality;
+  let pay='';
+  if(b.payment){const g=q?q.grade:'A';pay='<h4 style="margin:18px 0 8px">Payment</h4><table class="tbl"><tbody><tr><td>Net weight</td><td class="num">'+kg(b.net)+' ('+(b.net/40).toFixed(1)+' maunds)</td></tr><tr><td>Rate</td><td class="num">'+rs(b.payment.rate)+' per 40 kg</td></tr><tr><td>Grade '+g+' factor</td><td class="num">'+Math.round(GRADE[g].factor*100)+'%</td></tr><tr><td><strong>Amount</strong></td><td class="num"><strong>'+rs(b.payment.amount)+'</strong></td></tr><tr><td>Payment status</td><td class="num">'+b.payment.status+'</td></tr></tbody></table>'}
+  const body='<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px"><strong style="font-size:1.4rem;font-family:var(--display)">'+b.token+'</strong>'+chip(b.status)+'</div>'+
+  '<div class="grid2 sm"><div><span class="muted">Farmer</span><br><strong>'+esc(f.name)+'</strong><br>'+esc(f.phone)+'</div><div><span class="muted">Centre and slot</span><br><strong>'+esc(c.name)+'</strong><br>'+fmtDate(b.date)+', '+SLOTS[b.slot]+'</div><div style="margin-top:10px"><span class="muted">Crop</span><br><strong>'+esc(k.name)+'</strong></div><div style="margin-top:10px"><span class="muted">Expected quantity</span><br><strong>'+kg(b.qty)+'</strong></div></div>'+
+  (b.net?'<h4 style="margin:18px 0 8px">Weight</h4><table class="tbl"><tbody><tr><td>Gross (loaded)</td><td class="num">'+kg(b.gross)+'</td></tr><tr><td>Tare (empty vehicle)</td><td class="num">'+kg(b.tare)+'</td></tr><tr><td><strong>Net weight</strong></td><td class="num"><strong>'+kg(b.net)+'</strong></td></tr></tbody></table>'+(b.visual?'<p class="sm muted" style="margin-top:8px">Intake check: '+esc(b.visual)+(b.staffNote?'. '+esc(b.staffNote):'')+'</p>':''):'')+
+  (q?'<h4 style="margin:18px 0 8px">Quality</h4><table class="tbl"><tbody><tr><td>Grade</td><td class="num">'+q.grade+'</td></tr><tr><td>Moisture</td><td class="num">'+q.moisture+'% (limit '+k.maxMoist+'%)</td></tr><tr><td>Foreign matter</td><td class="num">'+q.foreign+'%</td></tr><tr><td>Damaged grain</td><td class="num">'+q.damaged+'%</td></tr><tr><td>Decision</td><td class="num">'+(q.decision==='approve'?'Approved':'Rejected')+'</td></tr></tbody></table>'+(q.remarks?'<p class="sm" style="margin-top:8px"><strong>Remarks:</strong> '+esc(q.remarks)+'</p>':''):'')+pay+
+  '<h4 style="margin:18px 0 8px">Progress</h4>'+timeline(b)+
+  '<div class="dlg-f">'+(b.receiptNo?'<button class="btn btn-primary" data-act="viewReceipt" data-id="'+b.id+'">View receipt</button>':'')+'<button class="btn btn-ghost" data-act="closeModal">Close</button></div>';
+  openModal('Booking details',body,'wide');
+}
+function receiptModal(b){
+  const f=F(b.farmerId),c=C(b.centreId),k=K(b.cropId),p=b.payment,q=b.quality;
+  const html='<div class="receipt"><div class="rc-head"><div><div class="brandline">'+logo()+'Fasal Token</div><div style="font-size:.85rem;color:#6b6b5b;margin-top:4px">'+esc(c.name)+'</div></div><div style="text-align:right"><strong>Procurement receipt</strong><br><span style="font-size:.85rem">'+b.receiptNo+'</span></div></div>'+
+  '<dl class="rc-grid"><div><dt>Farmer</dt><dd>'+esc(f.name)+'</dd></div><div><dt>Mobile</dt><dd>'+esc(f.phone)+'</dd></div><div><dt>Token</dt><dd>'+b.token+'</dd></div><div><dt>Date</dt><dd>'+fmtDate(b.date)+'</dd></div><div><dt>Crop</dt><dd>'+esc(k.name)+'</dd></div><div><dt>Quality grade</dt><dd>Grade '+q.grade+', moisture '+q.moisture+'%</dd></div></dl>'+
+  '<table class="rc-table"><tr><td>Gross weight</td><td>'+kg(b.gross)+'</td></tr><tr><td>Tare weight</td><td>'+kg(b.tare)+'</td></tr><tr><td>Net weight</td><td>'+kg(b.net)+' ('+(b.net/40).toFixed(1)+' maunds)</td></tr><tr><td>Rate per 40 kg</td><td>'+rs(p.rate)+'</td></tr><tr><td>Grade factor</td><td>'+Math.round(GRADE[q.grade].factor*100)+'%</td></tr><tr class="total"><td>Amount payable</td><td>'+rs(p.amount)+'</td></tr></table>'+
+  '<p class="rc-foot">Payment status: '+p.status+'. Issued '+(b.completedAt?new Date(b.completedAt).toLocaleDateString('en-GB'):'')+'. Sample rates are used in this prototype.</p></div>'+
+  '<div class="dlg-f"><button class="btn btn-ghost" data-act="closeModal">Close</button><button class="btn btn-primary" data-act="print">Print receipt</button></div>';
+  openModal('Receipt',html);
+}
+function weighModal(b){
+  const k=K(b.cropId);
+  openModal('Record weight for '+b.token,
+  '<p class="muted sm">'+esc(F(b.farmerId).name)+', '+esc(k.name)+', expected '+kg(b.qty)+'</p>'+
+  '<div class="grid2"><div class="field"><label class="f" for="wGross">Gross weight (kg)</label><input class="input" id="wGross" type="number" min="1" inputmode="numeric" data-live="net"></div><div class="field"><label class="f" for="wTare">Tare weight (kg)</label><input class="input" id="wTare" type="number" min="0" inputmode="numeric" data-live="net"></div></div>'+
+  '<div class="statusmsg"><span class="sm muted">Net weight</span><strong id="wNet" style="font-size:1.5rem">0 kg</strong></div>'+
+  '<div class="field"><label class="f" for="wVisual">Intake quality check</label><select class="select" id="wVisual"><option>Clean</option><option>Minor impurities</option><option>Visible damage or moisture</option></select></div>'+
+  '<div class="field"><label class="f" for="wNote">Note for the inspector (optional)</label><textarea class="textarea" id="wNote"></textarea></div>'+
+  '<div class="dlg-f"><button class="btn btn-ghost" data-act="closeModal">Cancel</button><button class="btn btn-primary" data-act="saveWeigh" data-id="'+b.id+'">Save weight and send to inspector</button></div>');
+}
+function inspectModal(b){
+  const k=K(b.cropId);
+  openModal('Inspect '+b.token,
+  '<p class="muted sm">'+esc(F(b.farmerId).name)+', '+esc(k.name)+', net weight '+kg(b.net)+(b.visual?'. Intake check: '+esc(b.visual):'')+(b.staffNote?'. '+esc(b.staffNote):'')+'</p>'+
+  '<div class="field"><span class="f">Quality grade</span><div class="seg" role="radiogroup" aria-label="Quality grade">'+['A','B','C'].map((g,i)=>'<label><input type="radio" name="iGrade" value="'+g+'" '+(i===0?'checked':'')+'><span>Grade '+g+'<small>'+GRADE[g].desc+'</small></span></label>').join('')+'</div></div>'+
+  '<div class="grid2"><div class="field"><label class="f" for="iMoist">Moisture (%)</label><input class="input" id="iMoist" type="number" step=".1" min="0" max="60" data-live="moist" data-max="'+k.maxMoist+'"><div class="hint">Limit for '+esc(k.name)+': '+k.maxMoist+'%</div></div><div class="field"><label class="f" for="iForeign">Foreign matter (%)</label><input class="input" id="iForeign" type="number" step=".1" min="0" max="100"></div><div class="field"><label class="f" for="iDamaged">Damaged or broken (%)</label><input class="input" id="iDamaged" type="number" step=".1" min="0" max="100"></div></div>'+
+  '<div id="moistWarn" class="warn" hidden></div>'+
+  '<div class="field" style="margin-top:14px"><label class="f" for="iRemarks">Remarks</label><textarea class="textarea" id="iRemarks"></textarea><div class="hint">Remarks are required when you reject produce.</div></div>'+
+  '<div class="dlg-f"><button class="btn btn-ghost" data-act="closeModal">Cancel</button><button class="btn btn-danger" data-act="decide" data-id="'+b.id+'" data-d="reject">Reject produce</button><button class="btn btn-primary" data-act="decide" data-id="'+b.id+'" data-d="approve">Approve produce</button></div>');
+}
+
+/* ================= render ================= */
+let tkTimer=null,lastKey='';
+function observe(){
+  const els=document.querySelectorAll('.rv');
+  if(!('IntersectionObserver' in window)){els.forEach(e=>e.classList.add('in'));return}
+  const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}}),{threshold:.12,rootMargin:'0px 0px -5% 0px'});
+  els.forEach(e=>io.observe(e));
+}
+function render(){
+  const ae=document.activeElement,fid=ae&&ae.id,pos=ae&&ae.selectionStart;
+  const portal=['farmer','staff','inspector','admin'];
+  if(portal.includes(S.page)&&!S.session)S.page='login';
+  let h;
+  switch(S.page){
+    case 'login':h=loginPage();break;
+    case 'farmer':h=portalHeader()+farmerView();break;
+    case 'staff':h=portalHeader()+staffView();break;
+    case 'inspector':h=portalHeader()+inspectorView();break;
+    case 'admin':h=portalHeader()+adminView();break;
+    case 'intro':h=intro();break;
+    default:h=home();
+  }
+  const tabKey={farmer:S.ui.farmerTab+(S.ui.booked||''),staff:S.ui.staffTab,inspector:S.ui.inspTab,admin:S.ui.adminTab,login:S.ui.loginRole+S.ui.loginMode}[S.page]||'';
+  const key=S.page+':'+tabKey,animate=key!==lastKey;lastKey=key;
+  const app=$('#app');app.classList.toggle('animate',animate);
+  app.innerHTML=h;
+  observe();
+  if(fid){const n=document.getElementById(fid);if(n&&n.focus){n.focus();try{if(pos!=null)n.setSelectionRange(pos,pos)}catch(e){}}}
+  clearInterval(tkTimer);
+  if(S.page==='home'&&$('#tkAhead')&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    let n=3;tkTimer=setInterval(()=>{
+      if(!$('#tkAhead')){clearInterval(tkTimer);return}
+      n=n===0?3:n-1;
+      const ta=$('#tkAhead');ta.textContent=n===0?'Next':n;ta.classList.remove('tick');void ta.offsetWidth;ta.classList.add('tick');
+      $('#tkLabel').textContent=n===0?'Your turn':(n===1?'farmer ahead':'farmers ahead');
+      $('#tkEta').textContent=n===0?'Go to the weighbridge':'about '+n*SERVICE_MIN+' min';
+      document.querySelectorAll('.t-dots .dot').forEach((d,i)=>d.classList.toggle('on',i<n));
+    },2600);
+  }
+}
+
+/* ================= events ================= */
+const H={},FORMS={},LIVE={};
+const showErr=m=>{const e=$('#authErr');if(e){e.textContent=m;e.hidden=false;e.scrollIntoView({block:'nearest'})}};
+const need=(id)=>S.bookings.find(b=>b.id===id);
+
+H.visit=(d,t)=>{
+  if(S.visiting)return;
+  const reduced=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced){S.page='home';render();window.scrollTo(0,0);return}
+  S.visiting=true;
+  const r=t.getBoundingClientRect(),tr=$('#transit');
+  tr.style.setProperty('--x',(r.left+r.width/2)+'px');tr.style.setProperty('--y',(r.top+r.height/2)+'px');
+  tr.className='';tr.hidden=false;
+  tr.innerHTML='<div class="tr-wipe w1"></div><div class="tr-wipe w2"></div><div class="tr-ticket" aria-hidden="true"><div class="sm" style="font-weight:600">Welcome to Fasal Token</div><div class="tk">FT-001</div><div class="sm" style="color:#6B6556">Wheat, rice, cotton and more</div><div class="perf"></div><strong>Your turn. Come on in.</strong></div>';
+  void tr.offsetWidth;tr.classList.add('run');
+  setTimeout(()=>{S.page='home';render();window.scrollTo(0,0);tr.classList.add('out')},1450);
+  setTimeout(()=>{tr.hidden=true;tr.className='';tr.innerHTML='';S.visiting=false},2150);
+};
+H.go=d=>{S.page=d.page;if(d.role){S.ui.loginRole=d.role;S.ui.loginMode='signin'}render();window.scrollTo(0,0)};
+H.anchor=d=>{const go=()=>{const el=document.getElementById(d.target);if(el)el.scrollIntoView({behavior:'smooth'})};if(S.page!=='home'){S.page='home';render();setTimeout(go,30)}else go()};
+H.pickRole=d=>{S.ui.loginRole=d.role;S.ui.loginMode='signin';render()};
+H.authMode=d=>{S.ui.loginMode=d.mode;render()};
+H.tab=d=>{S.ui[d.group]=d.val;if(d.group==='farmerTab'&&d.val==='book')S.ui.booked=null;render();window.scrollTo(0,0)};
+H.signout=async()=>{setToken(null);S.session=null;S.me=null;S.ui.booked=null;S.ui.book=null;S.ui.selBooking=null;S.ui.histAll=false;try{await loadState()}catch(e){}S.page='home';render();window.scrollTo(0,0)};
+H.closeModal=()=>closeModal();
+H.print=()=>{try{window.print()}catch(e){toast('Printing is not available here. Use your browser print option.')}};
+H.refresh=()=>act(()=>Promise.resolve(),'Queue status updated');
+H.histAll=()=>{S.ui.histAll=true;render()};
+H.detail=d=>detailModal(need(d.id));
+H.viewReceipt=d=>{closeModal();receiptModal(need(d.id))};
+
+/* farmer */
+H.track=d=>{S.ui.selBooking=d.id;S.ui.farmerTab='queue';S.ui.booked=null;render();window.scrollTo(0,0)};
+H.cancelBooking=d=>act(()=>api('/bookings/'+d.id+'/cancel','POST'),r=>'Booking '+r.booking.token+' cancelled');
+H.pickCentre=d=>{const bk=bookState();bk.centre=d.id;bk.slot=null;render()};
+H.pickDate=d=>{const bk=bookState();bk.date=d.date;bk.slot=null;render()};
+H.pickSlot=d=>{bookState().slot=+d.slot;render()};
+H.bookAnother=()=>{S.ui.booked=null;S.ui.book=null;render()};
+H.confirmBook=async()=>{
+  const bk=bookState(),q=bookQtyKg(bk),c=C(bk.centre);
+  if(!q)return toast('Enter the expected quantity of your crop.');
+  if(q>30000)return toast('Quantity is too large for one booking. Split it into two bookings.');
+  if(bk.slot==null)return toast('Choose a time slot.');
+  if(slotLoad(bk.centre,bk.date,bk.slot)>=slotCap(c))return toast('That slot just filled up. Choose another.');
+  if(S.busy)return;S.busy=true;
+  try{
+    const r=await api('/bookings','POST',{cropId:bk.crop,qty:q,centreId:bk.centre,date:bk.date,slot:bk.slot});
+    await loadState();S.ui.booked=r.booking.id;S.ui.book=null;render();window.scrollTo(0,0);toast('Token '+r.booking.token+' issued');
+  }catch(e){toast(e.message);try{await loadState();render()}catch(_){}}
+  finally{S.busy=false}
+};
+
+/* staff */
+H.checkIn=d=>{
+  const b=need(d.id);
+  if(b.date!==TODAY)return toast('Check-in opens on the booking date.');
+  return act(()=>api('/bookings/'+d.id+'/check-in','POST'),r=>r.booking.token+' checked in and added to the queue');
+};
+H.openWeigh=d=>weighModal(need(d.id));
+H.saveWeigh=async d=>{
+  const g=parseFloat($('#wGross').value),t=parseFloat($('#wTare').value);
+  if(!(g>0))return toast('Enter the gross weight.');
+  if(!(t>=0))return toast('Enter the tare weight (use 0 if none).');
+  if(g-t<=0)return toast('Gross weight must be more than tare weight.');
+  const r=await act(()=>api('/bookings/'+d.id+'/weigh','POST',{gross:Math.round(g),tare:Math.round(t),visual:$('#wVisual').value,note:$('#wNote').value.trim()}),r=>r.booking.token+' weighed. Sent to the inspector.');
+  if(r)closeModal();
+};
+H.qMove=d=>act(()=>api('/bookings/'+d.id+'/queue','POST',{action:+d.dir<0?'up':'down'}));
+H.qFront=d=>act(()=>api('/bookings/'+d.id+'/queue','POST',{action:'front'}),r=>r.booking.token+' moved to the front');
+H.qSkip=d=>act(()=>api('/bookings/'+d.id+'/queue','POST',{action:'end'}),r=>r.booking.token+' moved to the end');
+H.unload=d=>act(()=>api('/bookings/'+d.id+'/unload','POST'),r=>'Unloading confirmed for '+r.booking.token);
+H.complete=d=>act(()=>api('/bookings/'+d.id+'/complete','POST'),r=>'Procurement complete. Amount '+rs(r.booking.payment.amount));
+H.genReceipt=async d=>{
+  const b=need(d.id);
+  if(b.receiptNo)return receiptModal(b);
+  const r=await act(()=>api('/bookings/'+d.id+'/receipt','POST'),r=>'Receipt '+r.booking.receiptNo+' generated');
+  if(r)receiptModal(need(d.id));
+};
+
+/* inspector */
+H.openInspect=d=>inspectModal(need(d.id));
+H.decide=async d=>{
+  const gr=document.querySelector('input[name=iGrade]:checked'),m=parseFloat($('#iMoist').value),rem=$('#iRemarks').value.trim();
+  if(!(m>=0))return toast('Enter the moisture percentage.');
+  if(d.d==='reject'&&!rem)return toast('Add remarks explaining why the produce is rejected.');
+  const r=await act(()=>api('/bookings/'+d.id+'/inspect','POST',{grade:gr?gr.value:'A',moisture:m,foreign:parseFloat($('#iForeign').value)||0,damaged:parseFloat($('#iDamaged').value)||0,remarks:rem,decision:d.d}),r=>r.booking.token+(d.d==='approve'?' approved':' rejected'));
+  if(r)closeModal();
+};
+
+/* admin */
+H.toggleFarmer=d=>{const f=F(d.id);return act(()=>api('/farmers/'+d.id,'PATCH',{status:f.status==='active'?'suspended':'active'}),r=>r.farmer.name+(r.farmer.status==='active'?' reactivated':' suspended'))};
+H.saveCap=d=>{const v=parseInt($('#cap-'+d.id).value,10);if(!(v>=8&&v<=400))return toast('Capacity must be between 8 and 400 bookings.');return act(()=>api('/centres/'+d.id,'PATCH',{capacity:v}),'Capacity updated to '+v+' bookings per day')};
+H.toggleCentre=d=>{const c=C(d.id);return act(()=>api('/centres/'+d.id,'PATCH',{open:!c.open}),r=>r.centre.name+(r.centre.open?' is open for bookings':' is closed for bookings'))};
+H.saveCrop=d=>{const r=parseFloat($('#rate-'+d.id).value),m=parseFloat($('#moist-'+d.id).value);if(!(r>0)||!(m>0))return toast('Enter a valid rate and moisture limit.');return act(()=>api('/crops/'+d.id,'PATCH',{rate:r,maxMoist:m}),K(d.id).name+' updated')};
+H.toggleCrop=d=>{const k=K(d.id);return act(()=>api('/crops/'+d.id,'PATCH',{active:!k.active}),k.name+(k.active?' is paused for new bookings':' is accepted again'))};
+
+/* forms: errors from the server are shown in the red box at the top of the form */
+const formCall=async(fn)=>{if(S.busy)return;S.busy=true;try{await fn()}catch(e){showErr(e.message)}finally{S.busy=false}};
+FORMS.farmerIn=fd=>formCall(async()=>{
+  const r=await api('/auth/farmer/login','POST',{phone:fd.get('phone'),password:fd.get('password')});
+  await startSession(r,'farmer','home');
+});
+FORMS.farmerUp=fd=>formCall(async()=>{
+  const name=String(fd.get('name')).trim(),ph=digits(fd.get('phone')),cn=digits(fd.get('cnic')),pw=String(fd.get('password'));
+  if(name.length<3)throw new Error('Enter your full name.');
+  if(!/^03\d{9}$/.test(ph))throw new Error('Enter an 11 digit mobile number starting with 03.');
+  if(cn&&cn.length!==13)throw new Error('CNIC must be 13 digits, or leave it empty.');
+  if(!String(fd.get('village')).trim())throw new Error('Enter your village or town.');
+  if(pw.length<6)throw new Error('Password must be at least 6 characters.');
+  const r=await api('/auth/farmer/register','POST',{name,phone:ph,cnic:cn,village:String(fd.get('village')).trim(),district:fd.get('district'),password:pw});
+  await startSession(r,'farmer','book');toast('Account created. Book your first slot.');
+});
+FORMS.staffIn=fd=>formCall(async()=>{
+  if(!String(fd.get('uid')).trim()||!String(fd.get('pw')))throw new Error('Enter your employee ID and password.');
+  const r=await api('/auth/staff/login','POST',{empId:String(fd.get('uid')).trim(),password:String(fd.get('pw')),role:S.ui.loginRole});
+  await startSession(r,r.role);
+});
+FORMS.addFarmer=fd=>formCall(async()=>{
+  const name=String(fd.get('name')).trim(),ph=digits(fd.get('phone'));
+  if(name.length<3)throw new Error('Enter the farmer\u2019s full name.');
+  if(!/^03\d{9}$/.test(ph))throw new Error('Enter an 11 digit mobile number starting with 03.');
+  await api('/farmers','POST',{name,phone:ph,village:String(fd.get('village')).trim()});
+  await loadState();render();toast(name+' added');
+});
+FORMS.addCentre=fd=>formCall(async()=>{
+  const name=String(fd.get('name')).trim(),cap=parseInt(fd.get('capacity'),10);
+  if(name.length<3)throw new Error('Enter the centre name.');
+  if(!(cap>=8&&cap<=400))throw new Error('Capacity must be between 8 and 400 bookings.');
+  await api('/centres','POST',{name,district:String(fd.get('district')).trim(),capacity:cap});
+  await loadState();render();toast(name+' added');
+});
+FORMS.addCrop=fd=>formCall(async()=>{
+  const name=String(fd.get('name')).trim(),rate=parseFloat(fd.get('rate')),m=parseFloat(fd.get('moist'));
+  if(name.length<2)throw new Error('Enter the crop name.');
+  if(!(rate>0))throw new Error('Enter a sample rate in rupees per 40 kg.');
+  if(!(m>0))throw new Error('Enter a moisture limit.');
+  await api('/crops','POST',{name,rate,maxMoist:m});
+  await loadState();render();toast(name+' added');
+});
+
+LIVE.qty=()=>{
+  const bk=bookState(),q=bookQtyKg(bk),k=K(bk.crop);
+  const h=$('#qtyHint');if(h)h.textContent=q?kg(q)+' ('+(q/40).toFixed(1)+' maunds)':'1 maund = 40 kg';
+  const s=$('#sumQty');if(s)s.textContent=q?kg(q):'Not entered';
+  const e=$('#sumEst');if(e)e.textContent=q?rs(q/40*k.rate):'Enter quantity';
+};
+LIVE.net=()=>{const g=parseFloat($('#wGross').value)||0,t=parseFloat($('#wTare').value)||0;$('#wNet').textContent=num(Math.max(0,g-t))+' kg'};
+LIVE.moist=()=>{
+  const i=$('#iMoist'),w=$('#moistWarn'),v=parseFloat(i.value),mx=parseFloat(i.dataset.max);
+  if(v>mx){w.hidden=false;w.textContent='Moisture '+v+'% is above the '+mx+'% limit. Consider rejecting this load or noting it in the remarks.'}else w.hidden=true;
+};
+
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-act]');if(!t)return;
+  if(t.classList.contains('scrim')&&e.target!==t)return;
+  const fn=H[t.dataset.act];if(fn){if(t.tagName==='A')e.preventDefault();fn(t.dataset,t,e)}
+});
+document.addEventListener('submit',e=>{
+  const f=e.target.closest('[data-form]');if(!f)return;e.preventDefault();
+  const fn=FORMS[f.dataset.form];if(fn)fn(new FormData(f));
+});
+function setPath(p,v){const parts=p.split('.');let o=S.ui;while(parts.length>1){const k=parts.shift();o=o[k]=o[k]||{}}o[parts[0]]=v}
+function onField(e){
+  const t=e.target;
+  if(t.dataset.onchange&&e.type==='change'){const fn=H[t.dataset.onchange];if(fn)fn(t.value);return}
+  const textish=t.matches('input:not([type=radio]):not([type=checkbox]):not([type=date]),textarea');
+  if(e.type==='input'&&!textish)return;
+  if(e.type==='change'&&textish)return;
+  if(t.dataset.bind){setPath(t.dataset.bind,t.type==='number'&&t.dataset.render===undefined?t.value:t.value);if(t.dataset.render!==undefined)render()}
+  if(t.dataset.live&&LIVE[t.dataset.live])LIVE[t.dataset.live]();
+}
+document.addEventListener('input',onField);
+document.addEventListener('change',onField);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').hidden)closeModal()});
+
+/* start-up: load data from the server (restoring a saved sign-in if there is one) */
+(async function boot(){
+  try{await loadState()}
+  catch(e){if(TOKEN){setToken(null);try{await loadState()}catch(e2){}}}
+  S.page=S.session?S.session.role:'intro';
+  render();
+  if(!S.centres.length&&!S.session)toast('Cannot reach the server yet. Is the backend running?');
+})();
+/* keep the live queue fresh on the screens that show it (never on forms, so typing is not lost) */
+const LIVE_TABS={farmer:['home','queue','history'],staff:['bookings','queue','unload','receipts'],inspector:['pending','done'],admin:['overview','queues']};
+const tabNow=()=>({farmer:S.ui.farmerTab,staff:S.ui.staffTab,inspector:S.ui.inspTab,admin:S.ui.adminTab}[S.page]);
+setInterval(()=>{
+  if(!S.session||S.busy||document.hidden||!$('#modal').hidden)return;
+  const ae=document.activeElement;if(ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName))return;
+  if((LIVE_TABS[S.page]||[]).includes(tabNow()))loadState().then(render).catch(()=>{});
+},15000);
+})();
+</script>
+</body>
+</html>
